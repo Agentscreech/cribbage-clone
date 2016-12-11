@@ -1,7 +1,7 @@
-function scoreOfAKind(cards) {
+function scoreOfAKind(cards) { //might have trouble for the in play portion
     var names = [];
     for (i = 0; i < cards.length; i++) { //grabs the names of the cards to compare for pairs and puts it into a new array
-        names.push(cards[i]);
+        names.push(cards[i].name);
     }
     names.sort(function(a, b) { // sorts the numbers from smallest to largest
         return a - b;
@@ -21,7 +21,7 @@ function scoreOfAKind(cards) {
 
 function score15s(hand) { // grabs binary position representation of 2 or more cards and then adds them, if they equal 15, then score 2 points, returning totall points.
     var points = 0;
-    for (var combo = 1; combo <= 31; combo++) { //combo is 1 through 31 because 11111 in binary is 31.
+    for (var combo = 1; combo <= 31; combo++) { //combo is 1 through 31 because 11111 in binary is 31 and we have 5 cards to represent.
         var sum = 0;
         for (var pos = 0; pos <= 4; pos++) {
             if (((combo >> pos) & 1) == 1) {
