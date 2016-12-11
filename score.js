@@ -34,5 +34,13 @@ function score15s(cards) { // grabs binary position representation of 2 or more 
 }
 
 function scoreSequence(cards) {
-    
-}
+    cards.sort(function(a, b) {
+            return a.rank - b.rank;
+        });
+        for (var i = 0; i < cards.length - 1; i++) {
+            if (cards[i].rank + 1 != cards[i + 1].rank) {
+                return false;
+            }
+        }
+        return true;
+    }

@@ -1,7 +1,7 @@
 function Card(value, name, suit, rank) {
     this.value = value;
     this.name = name;
-    this.suit = suit;test
+    this.suit = suit;
     this.rank = rank;
 }
 
@@ -37,4 +37,4 @@ function shuffle(array) {
 }
 
 
-$('#p1c0').append('<img src="img/cards/' + test[0].rank + '_of_' + test[0].suit +'.png">'); //this draws the target card
+// $('#p1c0').append('<img src="img/cards/' + test[0].rank + '_of_' + test[0].suit +'.png">'); //this draws the target card
