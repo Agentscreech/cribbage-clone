@@ -1,3 +1,12 @@
+$(document).ready(function(){
+    var deck = buildDeck();
+    shuffle(deck);
+
+});
+
+
+
+
 function Card(value, name, suit, rank) {
     this.value = value;
     this.name = name;
@@ -5,7 +14,7 @@ function Card(value, name, suit, rank) {
     this.rank = rank;
 }
 
-function deck() {
+function buildDeck() {
     this.names = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
     this.suits = ['hearts', 'diamonds', 'spades', 'clubs'];
     var cards = [];

@@ -1,0 +1,39 @@
+#pegboard {
+    background: url('img/woodbackground.jpg');
+    background-size: cover;
+    height: 400px;
+
+}
+#scoreDisplay{
+    display: flex;
+    height: 50px;
+    background-color: green;
+    justify-content: space-between;
+    border: 1px solid;
+}
+#p2score {
+    display: flex;
+}
+#playarea {
+    background-color: green;
+    display: flex;
+
+}
+#cardrow{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+#player1cards {
+    display: flex;
+
+}
+#player2cards {
+    display: flex;
+
+}
+.cardbox {
+    width: 100px;
+    height: 150px;
+    border: 1px solid;
+}
