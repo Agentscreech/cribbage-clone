@@ -7,14 +7,32 @@ $(document).ready(function() {
 });
 
 function dealerSelector(){
-
-
+    $('#deckspot').empty();
+    $('#deckspot').append('<img src="img/cards/back-of-deck.png" alt="">');
+    var computerCard = deck[Math.floor(Math.random()* 52)];
+    console.log("computer selected " + computerCard.name + " of "+computerCard.suit);
+    $('#deckspot').prepend('<img src="img/cards/' + computerCard.name + '_of_' + computerCard.suit +'.png">');
+    $('#instruction').text("Computer has selected "+computerCard.name + ' of ' + computerCard.suit);
+    var playerCard =deck[Math.floor(Math.random()* 52)];
     $('#deckspot').click(function() {
-        var randomCard =Math.floor(Math.random()* 52);
-        $('#deckspot').empty();
-        $('#deckspot').append('<img src="img/cards/' + deck[randomCard].name + '_of_' + deck[randomCard].suit +'.png">');
+        $('#deckspot').append('<img src="img/cards/' + playerCard.name + '_of_' + playerCard.suit +'.png">');
+        if (playerCard.rank == computerCard.rank){
+            $('#instruction').text("You tied, please choose another card");
+            dealerSelector();
+        } else if (playerCard.rank > computerCard.rank) {
+            $('#deckspot').off('click');
+            $('#instruction').text("You won, you are the dealer!");
+            // run function that does the next phase
+        } else {
+            $('#deckspot').off('click');
+            $('#instruction').text("You lost, Computer is now the dealer");
+
+
+        }
     });
+
 }
+
 
 
 function drawPegs() {
