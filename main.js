@@ -12,13 +12,15 @@ function dealerSelector(){
     var computerCard = deck[Math.floor(Math.random()* 52)];
     console.log("computer selected " + computerCard.name + " of "+computerCard.suit);
     $('#deckspot').prepend('<img src="img/cards/' + computerCard.name + '_of_' + computerCard.suit +'.png">');
-    $('#instruction').text("Computer has selected "+computerCard.name + ' of ' + computerCard.suit);
-    var playerCard =deck[Math.floor(Math.random()* 52)];
+    $('#instruction').text("Computer has selected "+computerCard.name + ' of ' + computerCard.suit+". Please click the deck to pick a card at random");
+    var playerCard = deck[Math.floor(Math.random()* 52)];
+    console.log("player selected " + playerCard.name + " of "+playerCard.suit);
+
     $('#deckspot').click(function() {
         $('#deckspot').append('<img src="img/cards/' + playerCard.name + '_of_' + playerCard.suit +'.png">');
         if (playerCard.rank == computerCard.rank){
             $('#instruction').text("You tied, please choose another card");
-            dealerSelector();
+            setTimeout(dealerSelector, 1500);
         } else if (playerCard.rank > computerCard.rank) {
             $('#deckspot').off('click');
             $('#instruction').text("You won, you are the dealer!");
@@ -26,6 +28,7 @@ function dealerSelector(){
         } else {
             $('#deckspot').off('click');
             $('#instruction').text("You lost, Computer is now the dealer");
+            // run function that does the next phase
 
 
         }
