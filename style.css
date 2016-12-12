@@ -1,3 +1,8 @@
+#container{
+    width: 80%;
+    margin: 0 auto;
+}
+
 img{
     height: 150px;
     width: 100px;
@@ -6,6 +11,10 @@ img{
     background: url('img/woodbackground.jpg');
     background-size: cover;
     height: 400px;
+    justify-content: space-between;
+    flex-direction: column;
+    display: flex;
+
 
 }
 #scoreDisplay{
@@ -23,9 +32,9 @@ img{
 }
 #cardrow{
     display: flex;
-    width: 100%;
     justify-content: space-between;
     align-items: flex-end;
+    flex-wrap: wrap;
 
 }
 #player1cards {
@@ -40,7 +49,7 @@ img{
     width: 100px;
     height: 150px;
     border: 1px solid;
-    margin: 0 5px;
+    margin: 5px 5px;
     display: flex;
     justify-content: space-between;
 }
@@ -56,4 +65,71 @@ img{
     display: flex;
     flex-direction: row;
     justify-content: center;
+}
+.peghole {
+    width: 20px;
+    height: 20px;
+}
+#p1btrow {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 5px 0;
+}
+#p2btrow {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 5px 0;
+}
+#p1midrow {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 5px 0;
+}
+#p2midrow {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 5px 0;
+}
+#p1upmidrow {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 5px 0;
+}
+#p2upmidrow {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 5px 0;
+}
+#p1toprow {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 5px 0;
+}
+#p2toprow {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 5px 0;
+}
+#rowmiddle {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    margin: 25px 35px;
+}
+#rowbottom {
+    margin: 18px 35px;
+ }
+#rowtop {
+    margin: 25px 35px;
+}
+#rowuppermid {
+    margin: 25px 35px;
 }
