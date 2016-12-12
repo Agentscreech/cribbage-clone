@@ -1,5 +1,7 @@
+var deck = {};
 $(document).ready(function(){
-    var deck = buildDeck();
+    deck = buildDeck();
+    console.log("made " +deck+" , now shuffling");
     shuffle(deck);
 
 });
