@@ -19,16 +19,20 @@ function dealerSelector(){
     $('#deckspot').click(function() {
         $('#deckspot').append('<img src="img/cards/' + playerCard.name + '_of_' + playerCard.suit +'.png">');
         if (playerCard.rank == computerCard.rank){
-            $('#instruction').text("You tied, please choose another card");
-            setTimeout(dealerSelector, 1500);
+            $('#instruction').text("You tied, players will have to choose again");
+            setTimeout(dealerSelector, 2000);
         } else if (playerCard.rank > computerCard.rank) {
             $('#deckspot').off('click');
             $('#instruction').text("You won, you are the dealer!");
+            var turn = "player";
             // run function that does the next phase
+            dealCards(turn);
         } else {
             $('#deckspot').off('click');
             $('#instruction').text("You lost, Computer is now the dealer");
-            // run function that does the next phase
+            var turn = "computer";
+            dealCards(turn);
+
 
 
         }
@@ -36,7 +40,28 @@ function dealerSelector(){
 
 }
 
+function dealCards(turn){
+    var playerHand = [];
+    var computerHand = [];
+    // if (turn == "player"){ //likely will need refactoring
+    //      = player;
+    //     p2 = computer;
+    // } else {
+    //     p2 = player;
+    //     p1 = computer;
+    // }
+    for (i=0;i<6;i++){
+        playerHand.push(deck[0]);
+        deck.shift();
+        $('#p1c'+i).append('<img src="img/cards/' + playerHand[i].name + '_of_' + playerHand[i].suit +'.png">');
+        computerHand.push(deck[0]);
+        deck.shift();
+        $('#p2c'+i).append('<img src="img/cards/' + computerHand[i].name + '_of_' + computerHand[i].suit +'.png">');
+    }
+    console.log(playerHand);
+    console.log(computerHand);
 
+}
 
 function drawPegs() {
     for (i = 91; i < 121; i++) {
