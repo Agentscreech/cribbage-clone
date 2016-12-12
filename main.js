@@ -1,15 +1,24 @@
 var deck = {};
 $(document).ready(function() {
     deck = buildDeck();
-    console.log("made " + deck + " , now shuffling");
     shuffle(deck);
     drawPegs();
+    dealerSelector();
 });
+
+function dealerSelector(){
+
+
+    $('#deckspot').click(function() {
+        var randomCard =Math.floor(Math.random()* 52);
+        $('#deckspot').empty();
+        $('#deckspot').append('<img src="img/cards/' + deck[randomCard].name + '_of_' + deck[randomCard].suit +'.png">');
+    });
+}
 
 
 function drawPegs() {
     for (i = 91; i < 121; i++) {
-        console.log("drawing pegs 1-30");
         $('#p1toprow').append('<img id="p1peg'+i+'" "class="peghole" src="img/peghole.png" alt="">');
         $('#p2toprow').append('<img id="p2peg'+i+'" "class="peghole" src="img/peghole.png" alt="">');
     }
@@ -53,8 +62,7 @@ function buildDeck() {
 }
 
 function shuffle(array) {
-    var numberOfCards = array.length,
-        temp, randomCard;
+    var numberOfCards = array.length, temp, randomCard;
     while (numberOfCards) {
         randomCard = Math.floor(Math.random() * numberOfCards--);
         temp = array[numberOfCards];
