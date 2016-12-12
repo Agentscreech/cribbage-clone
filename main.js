@@ -1,13 +1,31 @@
 var deck = {};
-$(document).ready(function(){
+$(document).ready(function() {
     deck = buildDeck();
-    console.log("made " +deck+" , now shuffling");
+    console.log("made " + deck + " , now shuffling");
     shuffle(deck);
-
+    drawPegs();
 });
 
 
-
+function drawPegs() {
+    for (i = 91; i < 121; i++) {
+        console.log("drawing pegs 1-30");
+        $('#p1toprow').append('<img id="p1peg'+i+'" "class="peghole" src="img/peghole.png" alt="">');
+        $('#p2toprow').append('<img id="p2peg'+i+'" "class="peghole" src="img/peghole.png" alt="">');
+    }
+    for (i = 90; i > 60; i--) {
+        $('#p1upmidrow').append('<img id="p1peg'+i+'" "class="peghole" src="img/peghole.png" alt="">');
+        $('#p2upmidrow').append('<img id="p2peg'+i+'" "class="peghole" src="img/peghole.png" alt="">');
+    }
+    for (i = 31; i < 61; i++) {
+        $('#p1midrow').append('<img id="p1peg'+i+'" "class="peghole" src="img/peghole.png" alt="">');
+        $('#p2midrow').append('<img id="p2peg'+i+'" "class="peghole" src="img/peghole.png" alt="">');
+    }
+    for (i = 30; i > 0; i--) {
+        $('#p1btrow').append('<img id="p1peg'+i+'" "class="peghole" src="img/peghole.png" alt="">');
+        $('#p2btrow').append('<img id="p2peg'+i+'" "class="peghole" src="img/peghole.png" alt="">');
+    }
+}
 
 function Card(value, name, suit, rank) {
     this.value = value;

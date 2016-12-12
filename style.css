@@ -1,5 +1,5 @@
 #container{
-    width: 80%;
+    width: 90%;
     margin: 0 auto;
 }
 
@@ -7,6 +7,14 @@ img{
     height: 150px;
     width: 100px;
 }
+.pegrow {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 5px 0;
+
+}
+
 #pegboard {
     background: url('img/woodbackground.jpg');
     background-size: cover;
@@ -14,9 +22,9 @@ img{
     justify-content: space-between;
     flex-direction: column;
     display: flex;
-
-
+    border: solid black 10px;
 }
+
 #scoreDisplay{
     display: flex;
     height: 50px;
@@ -46,8 +54,8 @@ img{
 
 }
 .cardbox {
-    width: 100px;
-    height: 150px;
+    width: 80px;
+    height: 120px;
     border: 1px solid;
     margin: 5px 5px;
     display: flex;
@@ -66,62 +74,12 @@ img{
     flex-direction: row;
     justify-content: center;
 }
-.peghole {
+.peghole img {
     width: 20px;
     height: 20px;
 }
-#p1btrow {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin: 5px 0;
-}
-#p2btrow {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin: 5px 0;
-}
-#p1midrow {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin: 5px 0;
-}
-#p2midrow {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin: 5px 0;
-}
-#p1upmidrow {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin: 5px 0;
-}
-#p2upmidrow {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin: 5px 0;
-}
-#p1toprow {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin: 5px 0;
-}
-#p2toprow {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin: 5px 0;
-}
+
 #rowmiddle {
-    display: flex;
-    align-items: flex-end;
-    flex-direction: column;
     margin: 25px 35px;
 }
 #rowbottom {
