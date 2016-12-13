@@ -6,7 +6,7 @@
 img{
     height: 120px;
     width: 80px;
-    margin: 5px 5px;
+    /*margin: 5px 5px;*/
 }
 .pegrow {
     display: flex;
@@ -62,7 +62,7 @@ img{
     display: flex;
     justify-content: space-between;
 }
-#crib{
+#cribhome{
     display: flex;
     justify-content: flex-end;
 }
@@ -92,4 +92,9 @@ img{
 }
 #rowuppermid {
     margin: 25px 35px;
+}
+#deckspot {
+    display: flex;
+    width: 260px;
+    justify-content: space-between;;
 }
