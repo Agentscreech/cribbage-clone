@@ -3,6 +3,9 @@ var turn;
 var playerHand = [];
 var computerHand = [];
 var crib = [];
+var communityCard;
+var playerScore = 0;
+var computerScore = 0;
 $(document).ready(function() {
     deck = buildDeck();
     shuffle(deck);
@@ -39,23 +42,28 @@ function resetBoard() {
     deck = buildDeck();
     shuffle(deck);
     drawPegs();
-
+    playerHand = [];
+    computerHand = [];
     gameSequence("pickPlayer");
 
 
 }
 
 function drawCards() {
+    $('#cribhome img').remove();
     $('#cardrow img').remove();
+    $('#communitycard img').remove();
     for (i = 0; i < playerHand.length; i++) {
         $('#p1c' + i).append('<img src="img/cards/' + playerHand[i].name + '_of_' + playerHand[i].suit + '.png">');
     }
-    for (i = 0; i< computerHand.length; i++){
-        // $('#p2c' + i).empty();
+    for (i = 0; i < computerHand.length; i++) {
         $('#p2c' + i).append('<img src="img/cards/' + computerHand[i].name + '_of_' + computerHand[i].suit + '.png">');
     }
     for (j = 0; j < crib.length; j++) {
         $('#crib' + j).append('<img src="img/cards/' + crib[j].name + '_of_' + crib[j].suit + '.png">');
+    }
+    if (communityCard !== undefined) {
+        $('#communitycard').append('<img src="img/cards/' + communityCard.name + '_of_' + communityCard.suit + '.png">');
     }
 }
 
@@ -129,17 +137,55 @@ function sendToCrib(event) {
     var cardPicked = id.substr(id.length - 1);
     crib.push(playerHand[cardPicked]);
     playerHand.splice(cardPicked, 1);
-    console.log("player hand is "+playerHand.length+" cards");
+    console.log("player hand is " + playerHand.length + " cards");
     $(event.target).remove('img');
     if (crib.length == 4) {
         drawCards();
         for (i = 0; i < playerHand.length; i++) {
             $("#p1c" + i).off('click');
         }
-        gameSequence("playerTurn");
+        gameSequence("pickCommunityCard");
     }
 }
 
+function pickCommunityCard() {
+    if (turn == "player") {
+        $("#instruction").text("Computer is picking a community card");
+        communityCard = deck[Math.floor(Math.random() * deck.length)];
+        setTimeout(function() {
+            console.log(communityCard.name +" has been selected, drawing cards");
+            if (communityCard.name == "jack"){
+                $('#instruction').text("A Jack was drawn, two for his heels");
+                if (turn == "computer"){
+                    computerScore += 2;
+                } else {
+                    playerScore += 2;
+                }
+            }
+            drawCards();
+            gameSequence("playerTurn");
+        }, 1500);
+    } else {
+        $("#instruction").text("Pick a community card");
+        $('#deckspot').click(function(){
+            communityCard = deck[Math.floor(Math.random() * deck.length)];
+            if (communityCard.name == "jack"){
+                $('#instruction').text("A Jack was drawn, two for his heels");
+                if (turn == "computer"){
+                    computerScore += 2;
+                } else {
+                    playerScore += 2;
+                }
+            }
+            drawCards();
+            gameSequence("playerTurn");
+        });
+
+
+
+    }
+
+}
 
 
 function drawPegs() {
