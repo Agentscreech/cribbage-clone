@@ -6,6 +6,7 @@ var crib = [];
 var communityCard;
 var playerScore = 0;
 var computerScore = 0;
+var cardsPlayed = [];
 $(document).ready(function() {
     deck = buildDeck();
     shuffle(deck);
@@ -31,10 +32,30 @@ function gameSequence(state) {
     } else if (state == "pickCommunityCard") {
         //make board ready to pickCommunityCard
         pickCommunityCard();
-    } else if (state == "playerTurn") {
-        playerTurn();
+    } else if (state == "playPhase") {
+        playPhase();
     }
 
+
+}
+
+function playPhase(){
+    var lastPlayed = "";
+    var totalInPlay = 0;
+
+
+}
+function ableToPlay(){
+
+}
+function saidGo(totalInPlay, cardsPlayed){
+    if (ableToPlay(totalInPlay)){
+        //play a card
+        checkIfScored(cardsPlayed);
+    }
+
+}
+function checkIfScored(cardsPlayed){
 
 }
 
@@ -44,6 +65,7 @@ function resetBoard() {
     drawPegs();
     playerHand = [];
     computerHand = [];
+    crib = [];
     gameSequence("pickPlayer");
 
 
@@ -70,6 +92,7 @@ function drawCards() {
 function dealerSelector() {
     var computerCard = deck[Math.floor(Math.random() * 52)];
     console.log("computer selected " + computerCard.name + " of " + computerCard.suit);
+    $('#deckspot img').remove();
     $('#deckspot').prepend('<img src="img/cards/' + computerCard.name + '_of_' + computerCard.suit + '.png">');
     $('#instruction').text("Computer has selected " + computerCard.name + ' of ' + computerCard.suit + ".");
     setTimeout(function() {
@@ -124,9 +147,6 @@ function fillCrib() {
     crib.push(computerHand[computerCrib1]);
     computerHand.splice(computerCrib1, 1);
     console.log("crib has " + crib);
-
-
-
     for (i = 0; i < playerHand.length; i++) {
         $("#p1c" + i).click(sendToCrib);
     }

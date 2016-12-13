@@ -21,11 +21,11 @@ function scoreOfAKind(cards) { //might have trouble for the in play portion
 
 function score15s(cards) { // grabs binary position representation of 2 or more cards and then adds them, if they equal 15, then score 2 points, returning totall points.
     var points = 0;
-    for (var combo = 1; combo <= 31; combo++) { //combo is 1 through 31 because 11111 in binary is 31 and we have 5 cards to represent.
+    for (var combo = 1; combo <= ((2**cards.length)-1); combo++) { //jshint ignore:line
         var sum = 0;
-        for (var pos = 0; pos <= 4; pos++) {
+        for (var pos = 0; pos <= cards.length; pos++) {
             if (((combo >> pos) & 1) == 1) {
-                sum += cards[pos]; //looks at each position and if there is a "card" there, if so, it totals them.  ex. you want to add card[0] and card[3].  That would look like 01001 positionally (index0 is furthest right, index4 is furthest left).  This is comparison combination is represented as 9 in decimal. For each postion, bitshift it right by 0,1,2, or 3.  If after you do that, if there is a 1 in the right most postion, take the index equal to the amount that you shifted of the card array.  In this case, 0 and 3.
+                sum += cards[pos].value; //looks at each position and if there is a "card" there, if so, it totals them.  ex. you want to add card[0] and card[3].  That would look like 01001 positionally (index0 is furthest right, index4 is furthest left).  This is comparison combination is represented as 9 in decimal. For each postion, bitshift it right by 0,1,2, or 3.  If after you do that, if there is a 1 in the right most postion, take the index equal to the amount that you shifted of the card array.  In this case, 0 and 3.
             }
         }
         if (sum == 15) points += 2;
