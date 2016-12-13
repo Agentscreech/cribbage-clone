@@ -10,7 +10,23 @@ $(document).ready(function() {
     resetBoard();
 });
 
-function gameSequence() {
+function gameSequence(state) {
+    if(state=="pickPlayer"){
+        //make board ready to select a dealer
+        $('#deckspot').click(dealerSelector);
+    } else if (state=="deal"){
+        //make board ready to deal
+        dealCards();
+    } else if (state=="fillCrib"){
+        //make board ready to fillCrib
+        fillCrib();
+    } else if (state == "pickCommunityCard"){
+        //make board ready to pickCommunityCard
+        pickCommunityCard();
+    } else if (state == "playerTurn"){
+        playerTurn();
+    }
+
 
 }
 
@@ -20,7 +36,8 @@ function resetBoard() {
     drawPegs();
     $('#deckspot').empty();
     $('#deckspot').append('<img src="img/cards/back-of-deck.png" alt="">');
-    $('#deckspot').click(dealerSelector);
+    gameSequence("pickPlayer");
+
 
 }
 
