@@ -95,66 +95,87 @@ function playCard() {
         pointsEarned = checkIfScored(cardsPlayed);
         console.log("player earned " + pointsEarned + " points");
         playerScore += pointsEarned;
-        swapTurn();
         drawScore();
+        swapTurn();
         gameSequence("playPhase");
     }
 }
 
 function playerTurn() {
     //this is what will happen when it's the players turn
-
+    console.log("testing to see if "+turn+" can play");
     if (!ableToPlay()) {
-        console.log(turn +" wasn't able to play");
+        console.log(turn + " wasn't able to play");
         swapTurn();
         saidGo();
     } else {
-        //play a card, add it's value to totalInPlay
         for (i = 0; i < playerHand.length; i++) {
             $("#p1c" + i).click(playCard);
         }
     }
 
-    // swapTurn();
-    // gameSequence("playPhase");
 }
 
 function computerTurn() {
     //this is what happens when it's the computer's turn
+    console.log("testing to see if "+turn+" can play");
     if (!ableToPlay()) {
         swapTurn();
         saidGo();
     } else {
         playCard();
     }
-
-
-    // swapTurn();
-    // gameSequence("playPhase");
-
 }
 
 function saidGo(toldGo) {
-    // if (toldGo) {
-    //     if (ableToPlay()) {
-    //         //current player play a card
-    //         checkIfScored(cardsPlayed);
-    //         var went = true;
-    //         saidGo(went);
-    //     } else {
-    //         var went = false; //jshint ignore:line
-    //         saidGo(went);
-    //     }
-    //
-    // } else {
-    //     if (turn == "player") {
-    //         playerScore += 1;
-    //         drawScore();
-    //     } else {
-    //         computerScore += 1;
-    //         drawScore();
-    //     }
-    // }
+    if (toldGo) {
+        if (ableToPlay()) {
+            //current player play a card, if it's computer, sort their hand from low to high and play the lowest card.
+            if (turn == "computer") {
+                cardsPlayed.push(computerHand[0]);
+                computerHand.splice(0, 1);
+                drawCards();
+                $('#cardsplayed p').text(totalInPlay());
+                if (totalInPlay() == 31) {
+                    computerScore += 1;
+                }
+                pointsEarned = checkIfScored(cardsPlayed);
+                console.log("computer earned " + pointsEarned + " points");
+                computerScore += pointsEarned;
+                drawScore();
+            } else {
+                checkIfScored(cardsPlayed);
+                var went = true;
+                saidGo(went);
+            }
+        } else {
+            var id = event.target.parentElement.id;
+            var cardPicked = id.substr(id.length - 1);
+            console.log("player chose to play " + playerHand[cardPicked]);
+            cardsPlayed.push(playerHand[cardPicked]);
+            playerHand.splice(cardPicked, 1);
+            $('#cardsplayed p').text(totalInPlay());
+            drawCards();
+            if (totalInPlay() == 31) {
+                playerScore += 1;
+            }
+            pointsEarned = checkIfScored(cardsPlayed);
+            console.log("player earned " + pointsEarned + " points");
+            playerScore += pointsEarned;
+            drawScore();
+            var went = false; //jshint ignore:line
+            saidGo(went);
+        }
+
+    } else {
+        if (turn == "player") {
+            playerScore += 1;
+            drawScore();
+        } else {
+            computerScore += 1;
+            drawScore();
+        }
+    }
     //last player score +1, swapturn, reset totalInPlay, goto playPhase
 }
 
@@ -180,7 +201,7 @@ function ableToPlay() {
 }
 
 function playPhase() {
-    console.log(turn == " should be going now");
+    console.log(turn + " should be going now");
     $('#instruction p').text(turn + "'s turn to play a card");
     // var lastPlayed = "";
     setTimeout(function() {
@@ -259,6 +280,12 @@ function dealCards() {
         computerHand.push(deck[0]);
         deck.shift();
     }
+    playerHand.sort(function(a, b) {
+        return a.rank - b.rank;
+    });
+    computerHand.sort(function(a, b) {
+        return a.rank - b.rank;
+    });
     drawCards();
     gameSequence("fillCrib");
 }
@@ -296,7 +323,7 @@ function sendToCrib(event) {
 
 function pickCommunityCard() {
     if (turn == "computer") {
-        $("#instruction").text("Computer is picking a community card");
+        $('#instruction p').text("Computer is picking a community card");
         communityCard = deck[Math.floor(Math.random() * deck.length)];
         setTimeout(function() {
             if (communityCard.name == "jack") {
@@ -310,11 +337,11 @@ function pickCommunityCard() {
                 }
             }
             drawCards();
-            console.log(communityCard.name + " has been selected, drawing cards, trying to enter playPhase next, with " + turn+ " going first");
+            console.log(communityCard.name + " has been selected, drawing cards, trying to enter playPhase next, with " + turn + " going first");
             gameSequence("playPhase");
         }, 1500);
     } else {
-        $("#instruction").text("Pick a community card");
+        $('#instruction p').text("Pick a community card");
         $('#deckspot').click(function() {
             communityCard = deck[Math.floor(Math.random() * deck.length)];
             if (communityCard.name == "jack") {
