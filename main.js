@@ -104,16 +104,17 @@ function playerTurn() {
     //this is what will happen when it's the players turn
 
     if (!ableToPlay()) {
+        console.log(turn +" wasn't able to play");
         swapTurn();
         saidGo();
     } else {
         //play a card, add it's value to totalInPlay
-    }
-    for (i = 0; i < playerHand.length; i++) {
-        $("#p1c" + i).click(playCard);
+        for (i = 0; i < playerHand.length; i++) {
+            $("#p1c" + i).click(playCard);
+        }
     }
 
-    swapTurn();
+    // swapTurn();
     // gameSequence("playPhase");
 }
 
@@ -127,7 +128,7 @@ function computerTurn() {
     }
 
 
-    swapTurn();
+    // swapTurn();
     // gameSequence("playPhase");
 
 }
