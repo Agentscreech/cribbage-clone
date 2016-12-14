@@ -1,4 +1,39 @@
-function checkIfScored(cardsPlayed) {
+function scoringPhase() { // this should be called when play phase is over and we need to score the 3 sets of hands.
+    computerPlayed.push(communityCard);
+    playerPlayed.push(communityCard);
+    var computerPoints = 0;
+    var playerPoints = 0;
+    if (cribOwner == "player") {
+        playerPoints += checkIfScored(crib);
+        playerPoints += score15s(crib);
+    } else {
+        computerPoints += checkIfScored(crib);
+        computerPoints += score15s(crib);
+    }
+
+
+    setTimeout(function() {
+        computerPoints += checkIfScored(computerPlayed);
+        computerPoints += score15s(computerPlayed);
+        computerScore += computerPoints;
+        $('#instruction p').text("Computer scored " + computerPoints + " points.");
+    }, 1500);
+    setTimeout(function() {
+        playerPoints += checkIfScored(playerPlayed);
+        playerPoints += score15s(playerPlayed);
+        playerScore += playerPoints;
+        $('#instruction p').text("Player scored " + playerPoints + " points.");
+    }, 1500);
+    drawScore();
+    playerPoints += score15s(playerPlayed);
+    playerScore += playerPoints;
+    drawScore();
+    state = "turnTransitionPhase";
+    gameSequence();
+}
+
+
+function scoreOnPlay(cardsPlayed) { // turn this into the function that scores after each card is played.
     var totalScore = 0;
     var pairs = scoreOfAKind(cardsPlayed);
     // var runs = scoreSequence(cardsPlayed);

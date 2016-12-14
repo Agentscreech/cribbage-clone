@@ -11,6 +11,7 @@ var computerScore = 0;
 var cardsPlayed = [];
 var cribOwner = "";
 var state = "";
+var playerSelection;
 $(document).ready(function() {
     deck = buildDeck();
     shuffle(deck);
@@ -40,8 +41,188 @@ function gameSequence() { // game flow controller
 
         //make board ready for playPhase
         playPhase();
+    } else if (state == "resetPlayPhase") {
+        resetPlayPhase();
     }
 
+
+}
+
+function dealerSelector() { //something's funky with this when it's a tie TODO look into this.
+    var computerCard = deck[Math.floor(Math.random() * 52)];
+    // console.log("computer selected " + computerCard.name + " of " + computerCard.suit);
+    $('#deckspot img').remove();
+    $('#deckspot').prepend('<img src="img/cards/' + computerCard.name + '_of_' + computerCard.suit + '.png">');
+    $('#instruction p').text("Computer has selected " + computerCard.name + ' of ' + computerCard.suit + ".");
+    setTimeout(function() {
+        var playerCard = deck[Math.floor(Math.random() * 52)];
+        var text = "";
+        $('#instruction p').text("You selected " + playerCard.name + " of " + playerCard.suit);
+        $('#deckspot').append('<img src="img/cards/' + playerCard.name + '_of_' + playerCard.suit + '.png">');
+        setTimeout(function() {
+            if (playerCard.rank == computerCard.rank) {
+                $('#instruction p').text("You tied, players will have to choose again");
+                setTimeout(resetBoard, 1500);
+            } else if (playerCard.rank < computerCard.rank) {
+                $('#instruction p').text("You won, you are the dealer!");
+                $('#upper p').text("Your Crib");
+                cribOwner = "computer";
+                swapTurn();
+                $('#deckspot').off('click');
+                setTimeout(function() {
+                    state = "deal";
+                    gameSequence();
+                }, 1500);
+            } else {
+                $('#instruction p').text("You lost, the computer is the dealer.");
+                $('#upper p').text("Computer Crib");
+                cribOwner = "computer";
+                $('#deckspot').off('click');
+                setTimeout(function() {
+                    state = "deal";
+                    gameSequence();
+                }, 1500);
+            }
+        }, 2000);
+
+    }, 1000);
+}
+
+function dealCards() {
+    for (i = 0; i < 6; i++) {
+        playerHand.push(deck[0]);
+        deck.shift();
+        computerHand.push(deck[0]);
+        deck.shift();
+    }
+    playerHand.sort(function(a, b) {
+        return a.rank - b.rank;
+    });
+    computerHand.sort(function(a, b) {
+        return a.rank - b.rank;
+    });
+    drawCards();
+    state = "fillCrib";
+    gameSequence();
+}
+
+function fillCrib() {
+    $('#instruction p').text("Pick two cards to send to the crib.");
+    var computerCrib0 = Math.floor(Math.random() * computerHand.length);
+    crib.push(computerHand[computerCrib0]);
+    computerHand.splice(computerCrib0, 1);
+    var computerCrib1 = Math.floor(Math.random() * computerHand.length);
+    crib.push(computerHand[computerCrib1]);
+    computerHand.splice(computerCrib1, 1);
+    computerPlayed = computerHand;
+    drawCards();
+    for (i = 0; i < playerHand.length; i++) {
+        $("#p1c" + i).click(cardPlayerClicked);
+    }
+}
+
+function sendToCrib() {
+    crib.push(playerHand[playerSelection]);
+    playerHand.splice(playerSelection, 1);
+    // $(event.target).remove('img')
+    drawCards();
+    if (crib.length == 4) {
+        playerPlayed = playerHand;
+        drawCards();
+        for (i = 0; i < playerHand.length; i++) {
+            $("#p1c" + i).off('click');
+        }
+        state = "pickCommunityCard";
+        gameSequence();
+    }
+}
+
+function pickCommunityCard() {
+    if (turn == "computer") {
+        $('#instruction p').text("Computer is picking a community card");
+        communityCard = deck[Math.floor(Math.random() * deck.length)];
+        setTimeout(function() {
+            if (communityCard.name == "jack") {
+                $('#instruction p').text("A Jack was drawn, two for his heels");
+                if (turn == "player") {
+                    computerScore += 2;
+                    drawScore();
+                } else {
+                    playerScore += 2;
+                    drawScore();
+                }
+            }
+            drawCards();
+            console.log(communityCard.name + " has been selected, drawing cards, trying to enter playPhase next, with " + turn + " going first");
+            state = "playPhase";
+            gameSequence();
+        }, 1500);
+    } else {
+        $('#instruction p').text("Pick a community card");
+        $('#deckspot').click(function() {
+            communityCard = deck[Math.floor(Math.random() * deck.length)];
+            setTimeout(function() {
+                if (communityCard.name == "jack") {
+                    $('#instruction p').text("A Jack was drawn, two for his heels");
+                    if (turn == "computer") {
+                        computerScore += 2;
+                        drawScore();
+                    } else {
+                        playerScore += 2;
+                        drawScore();
+                    }
+                }
+            }, 1500);
+            drawCards();
+            console.log("communityCard picked, trying to go to playPhase with the active player is " + turn);
+            state = "playPhase";
+            gameSequence();
+        });
+    }
+}
+
+function playPhase() {
+    $('#instruction p').text(turn + "'s turn to play a card");
+    // var lastPlayed = "";
+    setTimeout(function() {
+        if (turn == "computer") {
+            computerTurn();
+        } else if (turn == "player") {
+            playerTurn();
+        } else {
+            console.log('turn variable is FUBAR');
+        }
+    }, 1500);
+}
+
+function resetPlayPhase() {
+    if (playerHand.length === 0 && computerHand.length === 0) {
+        console.log("all cards played, starting scoring");
+        state = "scoringPhase";
+        gameSequence();
+    } else {
+        swapTurn();
+        cardsPlayed = [];
+        $('#cardsplayed p').text("");
+        drawCards();
+        state = "playPhase";
+        gameSequence();
+    }
+}
+
+function cardPlayerClicked() {
+    //set the click handlers based on current state
+    var id = event.target.parentElement.id;
+    var cardPicked = id.substr(id.length - 1);
+    console.log("player chose to play " + playerHand[cardPicked].name);
+    playerSelection = cardPicked;
+    if (state == "fillCrib") {
+        sendToCrib();
+    } else if (state == "playPhase") {
+        playerPlayCard();
+    } else if (state == "playerGo"){
+        playerPlayCard();
+    }
 
 }
 
@@ -63,38 +244,6 @@ function totalInPlay() {
 }
 
 
-function scoringPhase() {
-    computerPlayed.push(communityCard);
-    playerPlayed.push(communityCard);
-    var computerPoints = 0;
-    var playerPoints = 0;
-    if (cribOwner == "player") {
-        playerPoints += checkIfScored(crib);
-        playerPoints += score15s(crib);
-    } else {
-        computerPoints += checkIfScored(crib);
-        computerPoints += score15s(crib);
-    }
-
-
-    setTimeout(function() {
-        computerPoints += checkIfScored(computerPlayed);
-        computerPoints += score15s(computerPlayed);
-        computerScore += computerPoints;
-        $('#instruction p').text("Computer scored " + computerPoints + " points.");
-    }, 1500);
-    setTimeout(function() {
-        playerPoints += checkIfScored(playerPlayed);
-        playerPoints += score15s(playerPlayed);
-        playerScore += playerPoints;
-        $('#instruction p').text("Player scored " + playerPoints + " points.");
-    }, 1500);
-    drawScore();
-    playerPoints += score15s(playerPlayed);
-    playerScore += playerPoints;
-    drawScore();
-    resetPlayPhase();
-}
 
 function turnTransitionPhase() {
     console.log("reseting playPhase and setting next player");
@@ -113,7 +262,8 @@ function turnTransitionPhase() {
     drawScore();
     // drawCards();
     swapTurn();
-    gameSequence("deal");
+    state = "deal";
+    gameSequence();
 
 }
 
@@ -138,22 +288,6 @@ function ableToPlay() {
 
 }
 
-function playPhase() {
-    $('#instruction p').text(turn + "'s turn to play a card");
-    // var lastPlayed = "";
-    setTimeout(function() {
-        if (turn == "computer") {
-            computerTurn();
-        } else if (turn == "player") {
-            playerTurn();
-        } else {
-            console.log('turn variable is FUBAR');
-        }
-    }, 2000);
-
-
-
-}
 
 
 
@@ -167,139 +301,16 @@ function resetBoard() {
     playerHand = [];
     computerHand = [];
     crib = [];
-    gameSequence("pickPlayer");
-
-
+    state = "pickPlayer";
+    gameSequence();
 }
 
 
-function dealerSelector() { //something's funky with this when it's a tie TODO look into this.
-    var computerCard = deck[Math.floor(Math.random() * 52)];
-    // console.log("computer selected " + computerCard.name + " of " + computerCard.suit);
-    $('#deckspot img').remove();
-    $('#deckspot').prepend('<img src="img/cards/' + computerCard.name + '_of_' + computerCard.suit + '.png">');
-    $('#instruction p').text("Computer has selected " + computerCard.name + ' of ' + computerCard.suit + ".");
-    setTimeout(function() {
-        var playerCard = deck[Math.floor(Math.random() * 52)];
-        var text = "";
-        $('#instruction p').text("You selected " + playerCard.name + " of " + playerCard.suit);
-        $('#deckspot').append('<img src="img/cards/' + playerCard.name + '_of_' + playerCard.suit + '.png">');
-        setTimeout(function() {
-            if (playerCard.rank == computerCard.rank) {
-                $('#instruction p').text("You tied, players will have to choose again");
-                setTimeout(resetBoard, 1500);
-            } else if (playerCard.rank < computerCard.rank) {
-                $('#instruction p').text("You won, you are the dealer!");
-                $('#upper p').text("Your Crib");
-                cribOwner = "computer";
-                swapTurn();
-                $('#deckspot').off('click');
-                setTimeout(function() {
-                    gameSequence("deal");
-                }, 1500);
-            } else {
-                $('#instruction p').text("You lost, the computer is the dealer.");
-                $('#upper p').text("Computer Crib");
-                cribOwner = "computer";
-                $('#deckspot').off('click');
-                setTimeout(function() {
-                    gameSequence("deal");
-                }, 1500);
-            }
-        }, 2000);
-
-    }, 1000);
-}
 
 
-function dealCards() {
-    for (i = 0; i < 6; i++) {
-        playerHand.push(deck[0]);
-        deck.shift();
-        computerHand.push(deck[0]);
-        deck.shift();
-    }
-    playerHand.sort(function(a, b) {
-        return a.rank - b.rank;
-    });
-    computerHand.sort(function(a, b) {
-        return a.rank - b.rank;
-    });
-    drawCards();
 
-    gameSequence("fillCrib");
-}
 
-function fillCrib() {
-    $('#instruction p').text("Pick two cards to send to the crib.");
-    var computerCrib0 = Math.floor(Math.random() * computerHand.length);
-    crib.push(computerHand[computerCrib0]);
-    computerHand.splice(computerCrib0, 1);
-    var computerCrib1 = Math.floor(Math.random() * computerHand.length);
-    crib.push(computerHand[computerCrib1]);
-    computerHand.splice(computerCrib1, 1);
-    computerPlayed = computerHand;
-    for (i = 0; i < playerHand.length; i++) {
-        $("#p1c" + i).click(sendToCrib);
-    }
-}
 
-function sendToCrib(event) {
-    var id = event.target.parentElement.id;
-    var cardPicked = id.substr(id.length - 1);
-    crib.push(playerHand[cardPicked]);
-    playerHand.splice(cardPicked, 1);
-    // $(event.target).remove('img')
-    drawCards();
-    if (crib.length == 4) {
-        playerPlayed = playerHand;
-        drawCards();
-        for (i = 0; i < playerHand.length; i++) {
-            $("#p1c" + i).off('click');
-        }
-        gameSequence("pickCommunityCard");
-    }
-}
-
-function pickCommunityCard() {
-    if (turn == "computer") {
-        $('#instruction p').text("Computer is picking a community card");
-        communityCard = deck[Math.floor(Math.random() * deck.length)];
-        setTimeout(function() {
-            if (communityCard.name == "jack") {
-                $('#instruction p').text("A Jack was drawn, two for his heels");
-                if (turn == "player") {
-                    computerScore += 2;
-                    drawScore();
-                } else {
-                    playerScore += 2;
-                    drawScore();
-                }
-            }
-            drawCards();
-            console.log(communityCard.name + " has been selected, drawing cards, trying to enter playPhase next, with " + turn + " going first");
-            gameSequence("playPhase");
-        }, 1500);
-    } else {
-        $('#instruction p').text("Pick a community card");
-        $('#deckspot').click(function() {
-            communityCard = deck[Math.floor(Math.random() * deck.length)];
-            if (communityCard.name == "jack") {
-                $('#instruction p').text("A Jack was drawn, two for his heels");
-                if (turn == "computer") {
-                    computerScore += 2;
-                    drawScore();
-                } else {
-                    playerScore += 2;
-                    drawScore();
-                }
-            }
-            drawCards();
-            console.log("communityCard picked, trying to go to playPhase with the active player is " + turn);
-            gameSequence("playPhase");
-        });
-    }
-}
 
 // function playCard() {
 //     var pointsEarned = 0;
