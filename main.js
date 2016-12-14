@@ -10,6 +10,7 @@ var playerScore = 0;
 var computerScore = 0;
 var cardsPlayed = [];
 var cribOwner = "";
+var state = "";
 $(document).ready(function() {
     deck = buildDeck();
     shuffle(deck);
@@ -17,7 +18,7 @@ $(document).ready(function() {
     resetBoard();
 });
 
-function gameSequence(state) { // game flow controller
+function gameSequence() { // game flow controller
     if (state == "pickPlayer") {
         //make board ready to select a dealer
         $('#instruction p').text("Please click the deck to have each player select a card at random");
@@ -61,172 +62,33 @@ function totalInPlay() {
     return sum;
 }
 
-function playCard() {
-    var pointsEarned = 0;
-    if (turn == "computer") {
-        //make the computer play a card at random
-        var cardToPlay = Math.floor(Math.random() * computerHand.length);
-        console.log("computer chose to play " + computerHand[cardToPlay]);
-        cardsPlayed.push(computerHand[cardToPlay]);
-        computerHand.splice(cardToPlay, 1);
-        drawCards();
-        $('#cardsplayed p').text(totalInPlay());
-        if (totalInPlay() == 31) {
-            computerScore += 1;
-        } else if (totalInPlay() == 15){
-            computerScore +=2;
-        }
-        pointsEarned = checkIfScored(cardsPlayed);
-        console.log("computer earned " + pointsEarned + " points");
-        computerScore += pointsEarned;
-        drawScore();
-        swapTurn();
-        gameSequence("playPhase");
-    } else {
-        //enable the player to choose a card to play.
-        var id = event.target.parentElement.id;
-        var cardPicked = id.substr(id.length - 1);
-        console.log("player chose to play " + playerHand[cardPicked]);
-        cardsPlayed.push(playerHand[cardPicked]);
-        playerHand.splice(cardPicked, 1);
-        for (i = 0; i < playerHand.length; i++) {
-            $("#p1c" + i).off('click');
-        }
-        $('#cardsplayed p').text(totalInPlay());
-        drawCards();
-        if (totalInPlay() == 31) {
-            playerScore += 1;
-        } else if (totalInPlay() == 15){
-            computerScore +=2;
-        }
-        pointsEarned = checkIfScored(cardsPlayed);
-        console.log("player earned " + pointsEarned + " points");
-        playerScore += pointsEarned;
-        drawScore();
-        swapTurn();
-        gameSequence("playPhase");
-    }
-}
 
-function playerTurn() {
-    //this is what will happen when it's the players turn
-    console.log("testing to see if "+turn+" can play");
-    if (!ableToPlay()) {
-        console.log(turn + " wasn't able to play");
-        swapTurn();
-        saidGo();
-    } else {
-        for (i = 0; i < playerHand.length; i++) {
-            console.log("looping for card "+playerHand[i].name);
-            // var test = playerHand[i].value + totalInPlay();
-            // console.log(test +"sum total value of player card and total cards in play");
-            // if (test < 32){
-                console.log(playerHand[i].name + " should be able to be played");
-                $("#p1c" + i).click(playCard);
-            // } else {
-                // return false;
-            // }
-        }
-    }
-
-}
-
-function computerTurn() {
-    //this is what happens when it's the computer's turn
-    console.log("testing to see if "+turn+" can play");
-    if (!ableToPlay()) {
-        swapTurn();
-        saidGo();
-    } else {
-        playCard();
-    }
-}
-
-function saidGo(toldGo) {
-    console.log("someone said go" + toldGo);
-    if (toldGo === undefined) { // basically the first time something called this.
-        if (ableToPlay()) {
-            //current player play a card, if it's computer, sort their hand from low to high and play the lowest card.
-            if (turn == "computer") {
-                cardsPlayed.push(computerHand[0]);
-                computerHand.splice(0, 1);
-                drawCards();
-                $('#cardsplayed p').text(totalInPlay());
-                if (totalInPlay() == 31) {
-                    computerScore += 1;
-                }
-                pointsEarned = checkIfScored(cardsPlayed);
-                console.log("computer earned " + pointsEarned + " points");
-                computerScore += pointsEarned;
-                drawScore();
-            } else {
-                // for (i = 0; i < playerHand.length; i++) {
-                //     $("#p1c" + i).click(playCard);  // find a way to only enable cards eligible to play in the play card function.
-                // }
-                var id = event.target.parentElement.id;
-                var cardPicked = id.substr(id.length - 1);
-                console.log("player chose to play " + playerHand[cardPicked]);
-                cardsPlayed.push(playerHand[cardPicked]);
-                playerHand.splice(cardPicked, 1);
-                $('#cardsplayed p').text(totalInPlay());
-                drawCards();
-                if (totalInPlay() == 31) {
-                    playerScore += 1;
-                }
-                pointsEarned = checkIfScored(cardsPlayed);
-                console.log("player earned " + pointsEarned + " points");
-                playerScore += pointsEarned;
-                drawScore();
-                var went = true;
-                saidGo(went);
-            }
-        } else {
-
-            var went = false; //jshint ignore:line
-            saidGo(went);
-        }
-
-    } else {
-        if (turn == "player") {
-            playerScore += 1;
-            drawScore();
-        } else {
-            computerScore += 1;
-            drawScore();
-        }
-        //score hands and owners crib then reset the playPhase
-        console.log("no one can play, the playPhase is over.  Tallying scores");
-        $('#instruction p').text("No player can play, tallying scores");
-        setTimeout(scoringPhase, 1000);
-    }
-}
-
-function scoringPhase (){
+function scoringPhase() {
     computerPlayed.push(communityCard);
     playerPlayed.push(communityCard);
     var computerPoints = 0;
     var playerPoints = 0;
-    if (cribOwner == "player"){
-            playerPoints += checkIfScored(crib);
-            playerPoints += score15s(crib);
-        } else {
-            computerPoints += checkIfScored(crib);
-            computerPoints += score15s(crib);
+    if (cribOwner == "player") {
+        playerPoints += checkIfScored(crib);
+        playerPoints += score15s(crib);
+    } else {
+        computerPoints += checkIfScored(crib);
+        computerPoints += score15s(crib);
     }
 
 
-    setTimeout(function(){
+    setTimeout(function() {
         computerPoints += checkIfScored(computerPlayed);
         computerPoints += score15s(computerPlayed);
         computerScore += computerPoints;
         $('#instruction p').text("Computer scored " + computerPoints + " points.");
-    },1500);
-    setTimeout(function(){
+    }, 1500);
+    setTimeout(function() {
         playerPoints += checkIfScored(playerPlayed);
         playerPoints += score15s(playerPlayed);
         playerScore += playerPoints;
         $('#instruction p').text("Player scored " + playerPoints + " points.");
-    },1500);
+    }, 1500);
     drawScore();
     playerPoints += score15s(playerPlayed);
     playerScore += playerPoints;
@@ -234,14 +96,14 @@ function scoringPhase (){
     resetPlayPhase();
 }
 
-function resetPlayPhase() {
+function turnTransitionPhase() {
     console.log("reseting playPhase and setting next player");
     cardsPlayed = [];
     playerHand = [];
     computerHand = [];
     crib = [];
     communityCard = [];
-    if (cribOwner == "player"){
+    if (cribOwner == "player") {
         $('#upper p').text("Computer Crib");
         cribOwner = "computer";
     } else {
@@ -439,107 +301,74 @@ function pickCommunityCard() {
     }
 }
 
-//  BUILD AND DRAW THINGS SECTION
-
-function drawCards() {
-    $('#cribhome img').remove();
-    $('#cardrow img').remove();
-    $('#communitycard img').remove();
-    $('#cardsplayed img').remove();
-    for (i = 0; i < playerHand.length; i++) {
-        $('#p1c' + i).append('<img src="img/cards/' + playerHand[i].name + '_of_' + playerHand[i].suit + '.png">');
-    }
-    for (i = 0; i < computerHand.length; i++) {
-        $('#p2c' + i).append('<img src="img/cards/' + computerHand[i].name + '_of_' + computerHand[i].suit + '.png">');
-    }
-    for (j = 0; j < crib.length; j++) {
-        $('#crib' + j).append('<img src="img/cards/' + crib[j].name + '_of_' + crib[j].suit + '.png">');
-    }
-    for (k = 0; k < cardsPlayed.length; k++) {
-        $('#cp' + k).append('<img src="img/cards/' + cardsPlayed[k].name + '_of_' + cardsPlayed[k].suit + '.png">');
-
-    }
-    if (communityCard !== undefined) {
-        $('#communitycard').append('<img src="img/cards/' + communityCard.name + '_of_' + communityCard.suit + '.png">');
-    }
-}
+// function playCard() {
+//     var pointsEarned = 0;
+//
+//     } else {
+//
+//     }
+// }
 
 
 
-function drawScore() {
-    drawPegs();
-    $("#p2peg" + computerScore).attr('src', "img/BlueDot.gif");
-    $("#p1peg" + playerScore).attr('src', "img/RedDot.gif");
-    $('#p1score p').text("Player 1 score: " + playerScore);
-    $('#p2score p').text("Player 2 score: " + computerScore);
-
-}
-
-
-function drawPegs() {
-    $('#p1toprow').empty();
-    $('#p2toprow').empty();
-    $('#p1upmidrow').empty();
-    $('#p2upmidrow').empty();
-    $('#p1midrow').empty();
-    $('#p2midrow').empty();
-    $('#p1btrow').empty();
-    $('#p2btrow').empty();
-    for (i = 91; i < 121; i++) {
-        $('#p1toprow').append('<img id="p1peg' + i + '" "class="peghole" src="img/peghole.png" alt="">');
-        $('#p2toprow').append('<img id="p2peg' + i + '" "class="peghole" src="img/peghole.png" alt="">');
-    }
-    for (i = 90; i > 60; i--) {
-        $('#p1upmidrow').append('<img id="p1peg' + i + '" "class="peghole" src="img/peghole.png" alt="">');
-        $('#p2upmidrow').append('<img id="p2peg' + i + '" "class="peghole" src="img/peghole.png" alt="">');
-    }
-    for (i = 31; i < 61; i++) {
-        $('#p1midrow').append('<img id="p1peg' + i + '" "class="peghole" src="img/peghole.png" alt="">');
-        $('#p2midrow').append('<img id="p2peg' + i + '" "class="peghole" src="img/peghole.png" alt="">');
-    }
-    for (i = 30; i > 0; i--) {
-        $('#p1btrow').append('<img id="p1peg' + i + '" "class="peghole" src="img/peghole.png" alt="">');
-        $('#p2btrow').append('<img id="p2peg' + i + '" "class="peghole" src="img/peghole.png" alt="">');
-    }
-}
-
-function Card(value, name, suit, rank) {
-    this.value = value;
-    this.name = name;
-    this.suit = suit;
-    this.rank = rank;
-}
-
-function buildDeck() {
-    this.names = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
-    this.suits = ['hearts', 'diamonds', 'spades', 'clubs'];
-    var cards = [];
-
-    for (var s = 0; s < this.suits.length; s++) {
-        for (var n = 0; n < this.names.length; n++) {
-            if (n < 10) {
-                cards.push(new Card(n + 1, this.names[n], this.suits[s], n + 1));
-            } else {
-                cards.push(new Card(10, this.names[n], this.suits[s], n + 1));
-            }
-        }
-    }
-
-    return cards;
-}
-
-function shuffle(array) {
-    var numberOfCards = array.length,
-        temp, randomCard;
-    while (numberOfCards) {
-        randomCard = Math.floor(Math.random() * numberOfCards--);
-        temp = array[numberOfCards];
-        array[numberOfCards] = array[randomCard];
-        array[randomCard] = temp;
-    }
-
-    return array;
-}
+// function saidGo(toldGo) {
+//     console.log("someone said go" + toldGo);
+//     if (toldGo === undefined) { // basically the first time something called this.
+//         if (ableToPlay()) {
+//             //current player play a card, if it's computer, sort their hand from low to high and play the lowest card.
+//             if (turn == "computer") {
+//                 cardsPlayed.push(computerHand[0]);
+//                 computerHand.splice(0, 1);
+//                 drawCards();
+//                 $('#cardsplayed p').text(totalInPlay());
+//                 if (totalInPlay() == 31) {
+//                     computerScore += 1;
+//                 }
+//                 pointsEarned = checkIfScored(cardsPlayed);
+//                 console.log("computer earned " + pointsEarned + " points");
+//                 computerScore += pointsEarned;
+//                 drawScore();
+//             } else {
+//                 // for (i = 0; i < playerHand.length; i++) {
+//                 //     $("#p1c" + i).click(playCard);  // find a way to only enable cards eligible to play in the play card function.
+//                 // }
+//                 var id = event.target.parentElement.id;
+//                 var cardPicked = id.substr(id.length - 1);
+//                 console.log("player chose to play " + playerHand[cardPicked]);
+//                 cardsPlayed.push(playerHand[cardPicked]);
+//                 playerHand.splice(cardPicked, 1);
+//                 $('#cardsplayed p').text(totalInPlay());
+//                 drawCards();
+//                 if (totalInPlay() == 31) {
+//                     playerScore += 1;
+//                 }
+//                 pointsEarned = checkIfScored(cardsPlayed);
+//                 console.log("player earned " + pointsEarned + " points");
+//                 playerScore += pointsEarned;
+//                 drawScore();
+//                 var went = true;
+//                 saidGo(went);
+//             }
+//         } else {
+//
+//             var went = false; //jshint ignore:line
+//             saidGo(went);
+//         }
+//
+//     } else {
+//         if (turn == "player") {
+//             playerScore += 1;
+//             drawScore();
+//         } else {
+//             computerScore += 1;
+//             drawScore();
+//         }
+//         //score hands and owners crib then reset the playPhase
+//         console.log("no one can play, the playPhase is over.  Tallying scores");
+//         $('#instruction p').text("No player can play, tallying scores");
+//         setTimeout(scoringPhase, 1000);
+//     }
+// }
 
 
 // $('#p1c0').append('<img src="img/cards/' + test[0].rank + '_of_' + test[0].suit +'.png">'); //this draws the target card
