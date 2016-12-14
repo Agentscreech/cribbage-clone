@@ -1,3 +1,26 @@
+function checkIfScored(cardsPlayed) {
+    var totalScore = 0;
+    var pairs = scoreOfAKind(cardsPlayed);
+    // var runs = scoreSequence(cardsPlayed);
+    if(cardsPlayed.length > 2){
+        var combos = Combinatorics.combination(cardsPlayed, 3);
+        var combo = combos.next();
+        while (combo) {
+            var score = scoreSequence(combo);
+            totalScore += score;
+            combo = combos.next();
+        }
+    }
+    totalScore += pairs;
+    return totalScore;
+}
+//     console.log(combo);
+// var hand = [1, 2, 2, 3, 3];
+
+
+
+
+
 function scoreOfAKind(cards) { //might have trouble for the in play portion
     var names = [];
     for (i = 0; i < cards.length; i++) { //grabs the names of the cards to compare for pairs and puts it into a new array
