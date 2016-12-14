@@ -20,7 +20,7 @@ $(document).ready(function() {
 function gameSequence(state) {
     if (state == "pickPlayer") {
         //make board ready to select a dealer
-        $('#instruction').text("Please click the deck to have each player select a card at random");
+        $('#instruction p').text("Please click the deck to have each player select a card at random");
         $('#deckspot').empty();
         $('#deckspot').append('<img src="img/cards/back-of-deck.png" alt="">');
         $('#deckspot').click(dealerSelector);
@@ -69,6 +69,7 @@ function playCard() {
         cardsPlayed.push(computerHand[cardToPlay]);
         computerHand.splice(cardToPlay, 1);
         drawCards();
+        $('#cardsplayed p').text(totalInPlay());
         if (totalInPlay() == 31) {
             computerScore += 1;
         }
@@ -86,7 +87,7 @@ function playCard() {
         console.log("player chose to play " + playerHand[cardPicked]);
         cardsPlayed.push(playerHand[cardPicked]);
         playerHand.splice(cardPicked, 1);
-        // $(event.target).remove('img');
+        $('#cardsplayed p').text(totalInPlay());
         drawCards();
         if (totalInPlay() == 31) {
             playerScore += 1;
@@ -180,7 +181,7 @@ function ableToPlay() {
 
 function playPhase() {
     console.log(turn == " should be going now");
-    $('#instruction').text(turn + "'s turn to play a card");
+    $('#instruction p').text(turn + "'s turn to play a card");
     // var lastPlayed = "";
     setTimeout(function() {
         if (turn == "computer") {
@@ -219,26 +220,27 @@ function dealerSelector() { //something's funky with this when it's a tie TODO l
     // console.log("computer selected " + computerCard.name + " of " + computerCard.suit);
     $('#deckspot img').remove();
     $('#deckspot').prepend('<img src="img/cards/' + computerCard.name + '_of_' + computerCard.suit + '.png">');
-    $('#instruction').text("Computer has selected " + computerCard.name + ' of ' + computerCard.suit + ".");
+    $('#instruction p').text("Computer has selected " + computerCard.name + ' of ' + computerCard.suit + ".");
     setTimeout(function() {
         var playerCard = deck[Math.floor(Math.random() * 52)];
         var text = "";
-        $('#instruction').text("You selected " + playerCard.name + " of " + playerCard.suit);
+        $('#instruction p').text("You selected " + playerCard.name + " of " + playerCard.suit);
         $('#deckspot').append('<img src="img/cards/' + playerCard.name + '_of_' + playerCard.suit + '.png">');
         setTimeout(function() {
             if (playerCard.rank == computerCard.rank) {
-                $('#instruction').text("You tied, players will have to choose again");
+                $('#instruction p').text("You tied, players will have to choose again");
                 setTimeout(resetBoard, 1500);
             } else if (playerCard.rank < computerCard.rank) {
-                $('#instruction').text("You won, you are the dealer!");
+                $('#instruction p').text("You won, you are the dealer!");
+                $('#upper p').text("Your Crib");
                 swapTurn();
                 $('#deckspot').off('click');
                 setTimeout(function() {
                     gameSequence("deal");
                 }, 1500);
             } else {
-                $('#instruction').text("You lost, the computer is the dealer.");
-                // turn = "player";
+                $('#instruction p').text("You lost, the computer is the dealer.");
+                $('#upper p').text("Computer Crib");
                 $('#deckspot').off('click');
                 setTimeout(function() {
                     gameSequence("deal");
@@ -262,7 +264,7 @@ function dealCards() {
 }
 
 function fillCrib() {
-    $('#instruction').text("Pick two cards to send to the crib.");
+    $('#instruction p').text("Pick two cards to send to the crib.");
     var computerCrib0 = Math.floor(Math.random() * computerHand.length);
     crib.push(computerHand[computerCrib0]);
     computerHand.splice(computerCrib0, 1);
@@ -298,7 +300,7 @@ function pickCommunityCard() {
         communityCard = deck[Math.floor(Math.random() * deck.length)];
         setTimeout(function() {
             if (communityCard.name == "jack") {
-                $('#instruction').text("A Jack was drawn, two for his heels");
+                $('#instruction p').text("A Jack was drawn, two for his heels");
                 if (turn == "player") {
                     computerScore += 2;
                     drawScore();
@@ -316,7 +318,7 @@ function pickCommunityCard() {
         $('#deckspot').click(function() {
             communityCard = deck[Math.floor(Math.random() * deck.length)];
             if (communityCard.name == "jack") {
-                $('#instruction').text("A Jack was drawn, two for his heels");
+                $('#instruction p').text("A Jack was drawn, two for his heels");
                 if (turn == "computer") {
                     computerScore += 2;
                     drawScore();
@@ -332,7 +334,7 @@ function pickCommunityCard() {
     }
 }
 
-//  DRAW THINGS SECTION
+//  BUILD AND DRAW THINGS SECTION
 
 function drawCards() {
     $('#cribhome img').remove();
