@@ -8,36 +8,41 @@ function scoringPhase() { // this should be called when play phase is over and w
     if (cribOwner == "player") {
         playerPoints += scoreAll(crib);
         $('#instruction p').text("Crib was worth " + playerPoints + " points for the player.");
-    } else {
+    } else if (cribOwner == "computer"){
         computerPoints += scoreAll(crib);
         $('#instruction p').text("Crib was worth " + computerPoints + " points for the computer.");
+    } else {
+        console.log("error with cribOwner variable");
     }
     setTimeout(function() {
         computerPoints += scoreAll(computerPlayed);
         computerScore += computerPoints;
+        console.log("Computer scored " + computerPoints + " points.");
         $('#instruction p').text("Computer scored " + computerPoints + " points.");
         if (computerScore >= 121){
             console.log("computer won");
-            drawWinner("computer");
+            findWinner("computer");
+            return false;
         } else {}
     }, 1500);
     setTimeout(function() {
         playerPoints += scoreAll(playerPlayed);
         playerScore += playerPoints;
+        console.log("Player scored " + playerPoints + " points.");
         $('#instruction p').text("Player scored " + playerPoints + " points.");
-        if (playerScore >= 121){
-            console.log("player won");
-            drawWinner("player");
-        } else {
-            drawScore();
-            state = "turnTransitionPhase";
-            setTimeout(gameSequence,2000);
-        }
+        findWinner("player");
+        drawScore();
+        state = "turnTransitionPhase";
+        setTimeout(gameSequence,2000);
+
     }, 3000);
 }
 
-function drawWinner(whoWon) {
-    $('#instruction p').text(whoWon + " WON!!!");
+function findWinner(whoWon) {
+    // drawScore();
+    // $('#instruction p').text(whoWon + " WON!!!");
+    // return false;
+
 }
 
 function scoreOnPlay(cardsPlayed) { // turn this into the function that scores after each card is played.
@@ -56,8 +61,7 @@ function scoreOnPlay(cardsPlayed) { // turn this into the function that scores a
     totalScore += pairs;
     return totalScore;
 }
-//     console.log(combo);
-// var hand = [1, 2, 2, 3, 3];
+
 
 function scoreAll(hand) {
     var points = 0;

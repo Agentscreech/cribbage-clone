@@ -1,9 +1,7 @@
 var deck = {};
 var turn = "player";
 var playerHand = [];
-var playerPlayed = [];
 var computerHand = [];
-var computerPlayed = [];
 var crib = [];
 var communityCard;
 var playerScore = 0;
@@ -13,7 +11,6 @@ var cribOwner = "";
 var state = "";
 var playerSelection;
 $(document).ready(function() {
-
     drawPegs();
     resetBoard();
 });
@@ -39,7 +36,6 @@ function gameSequence() { // game flow controller
         localStorage.setItem('computerCards', JSON.stringify(computerHand));
         pickCommunityCard();
     } else if (state == "playPhase") {
-
         //make board ready for playPhase
         playPhase();
     } else if (state == "resetPlayPhase") {
@@ -53,8 +49,6 @@ function gameSequence() { // game flow controller
 
 function dealerSelector() { //something's funky with this when it's a tie TODO look into this.
     var computerCard = deck[Math.floor(Math.random() * 52)];
-    // console.log("computer selected " + computerCard.name + " of " + computerCard.suit);
-    $('#deckspot img').remove();
     $('#deckspot').prepend('<img src="img/cards/' + computerCard.name + '_of_' + computerCard.suit + '.png">');
     $('#instruction p').text("Computer has selected " + computerCard.name + ' of ' + computerCard.suit + ".");
     setTimeout(function() {
@@ -65,7 +59,7 @@ function dealerSelector() { //something's funky with this when it's a tie TODO l
         setTimeout(function() {
             if (playerCard.rank == computerCard.rank) {
                 $('#instruction p').text("You tied, players will have to choose again");
-                setTimeout(resetBoard, 1500);
+                setTimeout(resetBoard, 1000);
             } else if (playerCard.rank < computerCard.rank) {
                 $('#instruction p').text("You won, you are the dealer!");
                 $('#upper p').text("Your Crib");
@@ -88,7 +82,7 @@ function dealerSelector() { //something's funky with this when it's a tie TODO l
             }
         }, 2000);
 
-    }, 3000);
+    }, 2500);
 }
 
 function dealCards() {
@@ -186,9 +180,9 @@ function pickCommunityCard() {
 }
 
 function playPhase() {
-    $('#instruction p').text(turn + "'s turn to play a card");
     // var lastPlayed = "";
     setTimeout(function() {
+        $('#instruction p').text(turn + "'s turn to play a card");
         if (turn == "computer") {
             computerTurn();
         } else if (turn == "player") {
@@ -261,6 +255,7 @@ function turnTransitionPhase() {
         cribOwner = "computer";
     } else {
         $('#upper p').text("Your Crib");
+        cribOwner = "player";
     }
     $('#cardsplayed p').text("");
     drawScore();

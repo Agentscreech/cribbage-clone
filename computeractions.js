@@ -2,7 +2,7 @@ function computerPlayCard() {
     //make the computer play a card at random
     var cardToPlay = Math.floor(Math.random() * computerHand.length);
     if ((computerHand[cardToPlay].value + totalInPlay()) > 32) {
-        $('#instruction p ').text('Computer picked an invalid card');
+        console.log('Computer picked an invalid card');
         computerPlayCard();
     } else {
         console.log("computer chose to play " + computerHand[cardToPlay].name);
@@ -39,7 +39,8 @@ function playerSaidGo() {
         // scoreOnPlay();
         setTimeout(playerSaidGo, 1500);
     } else {
-        //computerScore += 1
+        computerScore += 1;
+        drawScore();
         state = "resetPlayPhase";
         console.log("computer can't go, resetting play phase");
         $('#instruction p').text("Computer can no longer make a move, the round is over");

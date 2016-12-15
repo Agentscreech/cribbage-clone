@@ -1,8 +1,11 @@
 function playerPlayCard() {
-    if (state !== "playerGo") {
+    if (turn == "computer") {
+        return false;
+    } else if (state !== "playerGo") {
         if (playerHand[playerSelection].value + totalInPlay() > 32) {
             $('#instruction p ').text('Unable to play that card, choose another one');
             playerTurn();
+            return false;
         } else {
             cardsPlayed.push(playerHand[playerSelection]);
             playerHand.splice(playerSelection, 1);
@@ -14,7 +17,6 @@ function playerPlayCard() {
             state = "playPhase";
             gameSequence();
         }
-
     } else {
         if (playerHand[playerSelection].value + totalInPlay() > 32) {
             $('#instruction p ').text('Unable to play that card, choose another one');
@@ -42,7 +44,7 @@ function playerTurn() {
         console.log("player wasn't able to play");
         swapTurn();
         $('#instruction p').text("You can not make a move, you say 'GO'");
-        playerSaidGo();
+        setTimeout(playerSaidGo,1500);
     } else {
         for (i = 0; i < playerHand.length; i++) {
             $("#p1c" + i).click(cardPlayerClicked);
@@ -57,7 +59,8 @@ function computerSaidGo() {
     if (ableToPlay()) {
         playerTurn();
     } else {
-        //playerScore += 1
+        playerScore += 1;
+        drawScore();
         state = "resetPlayPhase";
         console.log("player can't go, resetting play phase");
         $('#instruction p').text("You can no longer make a move, the round is over");
