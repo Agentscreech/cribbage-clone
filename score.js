@@ -11,12 +11,16 @@ function scoringPhase() { // this should be called when play phase is over and w
 function scoreCrib() {
     var computerPoints = 0;
     var playerPoints = 0;
+    crib.push(communityCard);
     if (cribOwner == "computer") {
         computerPoints += scoreAll(crib);
+        computerScore += computerPoints;
+        console.log("computer crib was worth " + computerPoints);
         $('#instruction p').text("Crib was worth " + computerPoints + " points for the computer.");
         findWinner();
     } else if (cribOwner == "player") {
         playerPoints += scoreAll(crib);
+        playerScore += playerPoints;
         console.log("player's crib was worth " + playerPoints);
         $('#instruction p').text("Crib was worth " + playerPoints + " points for the player.");
     } else {
@@ -34,14 +38,17 @@ function scorePlayerPhase() {
     $('#instruction p').text("Player scored " + playerPoints + " points.");
     findWinner();
     drawScore();
+    console.log("player scored from their Hand, score is " + playerScore);
     setTimeout(function() {
         if (cribOwner == "computer") {
             state = "scoreComputerPhase";
             gameSequence();
         } else {
             scoreCrib();
-            state = "turnTransitionPhase";
-            setTimeout(gameSequence, 2000);
+            setTimeout(function() {
+                state = "turnTransitionPhase";
+                gameSequence();
+            }, 4000);
         }
     }, 1500);
 }
@@ -56,22 +63,23 @@ function scoreComputerPhase() {
     $('#instruction p').text("Computer scored " + computerPoints + " points.");
     findWinner();
     drawScore();
+    console.log("computer scored from their Hand, score is " + computerScore);
     setTimeout(function() {
         if (cribOwner == "player") {
             state = "scorePlayerPhase";
             gameSequence();
         } else {
             scoreCrib();
-            state = "turnTransitionPhase";
-            setTimeout(gameSequence, 2000);
+            setTimeout(function() {
+                state = "turnTransitionPhase";
+                gameSequence();
+            }, 4000);
         }
     }, 1500);
 }
 
 function findWinner() {
-    // drawScore();
-    // $('#instruction p').text(whoWon + " WON!!!");
-    // return false;
+
 
 }
 

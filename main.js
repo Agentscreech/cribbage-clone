@@ -148,9 +148,13 @@ function pickCommunityCard() {
                 $('#instruction p').text("A Jack was drawn, two for his heels");
                 if (turn == "player") {
                     computerScore += 2;
+                    findWinner();
                     drawScore();
+                    console.log("computer scored from Heels, score is " + computerScore);
                 } else {
                     playerScore += 2;
+                    findWinner();
+                    console.log("player scored from Heels, score is " + playerScore);
                     drawScore();
                 }
             }
@@ -168,15 +172,19 @@ function pickCommunityCard() {
                     $('#instruction p').text("A Jack was drawn, two for his heels");
                     if (turn == "computer") {
                         computerScore += 2;
+                        findWinner();
                         drawScore();
+                        console.log("computer scored from Heels, score is " + computerScore);
                     } else {
                         playerScore += 2;
+                        findWinner();
+                        console.log("player scored from Heels, score is " +playerScore);
                         drawScore();
                     }
                 }
             }, 1500);
             drawCards();
-            console.log("communityCard picked, trying to go to playPhase with the active player is " + turn);
+            console.log("communityCard picked, it was " + communityCard.name);
             state = "playPhase";
             gameSequence();
         });
@@ -201,7 +209,7 @@ function resetPlayPhase() {
     if (playerHand.length === 0 && computerHand.length === 0) {
         console.log("all cards played, starting scoring");
         state = "scoringPhase";
-        gameSequence();
+        setTimeout(gameSequence, 1500);
     } else {
         swapTurn();
         cardsPlayed = [];

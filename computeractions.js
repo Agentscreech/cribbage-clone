@@ -5,7 +5,6 @@ function computerPlayCard() {
         console.log('Computer picked an invalid card');
         computerPlayCard();
     } else {
-        console.log("computer chose to play " + computerHand[cardToPlay].name);
         cardsPlayed.push(computerHand[cardToPlay]);
         computerHand.splice(cardToPlay, 1);
         drawCards();
@@ -19,7 +18,6 @@ function computerPlayCard() {
 
 function computerTurn() {
     //this is what happens when it's the computer's turn
-    console.log("testing to see if computer can play");
     if (!ableToPlay()) {
         swapTurn();
         $('#instruction p').text("Computer can not make a move, it says 'GO'");
@@ -40,10 +38,15 @@ function playerSaidGo() {
         setTimeout(playerSaidGo, 1500);
     } else {
         computerScore += 1;
+        findWinner();
         drawScore();
+        console.log("computer scored from Go, score is " +computerScore);
+        setTimeout(function (){
+            $('#instruction p').text("Computer scores 1 for the Go/Last");
+        },1000);
         state = "resetPlayPhase";
         console.log("computer can't go, resetting play phase");
         $('#instruction p').text("Computer can no longer make a move, the round is over");
-        setTimeout(gameSequence, 1500);
+        setTimeout(gameSequence, 1000);
     }
 }
