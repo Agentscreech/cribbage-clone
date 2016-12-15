@@ -1,43 +1,50 @@
 function scoringPhase() { // this should be called when play phase is over and we need to score the 3 sets of hands.
+    computerPlayed = JSON.parse(localStorage.getItem('computerCards'));
+    playerPlayed = JSON.parse(localStorage.getItem('playerCards'));
     computerPlayed.push(communityCard);
     playerPlayed.push(communityCard);
     var computerPoints = 0;
     var playerPoints = 0;
     if (cribOwner == "player") {
-        playerPoints += checkIfScored(crib);
-        playerPoints += score15s(crib);
+        playerPoints += scoreAll(crib);
+        $('#instruction p').text("Crib was worth " + playerPoints + " points for the player.");
     } else {
-        computerPoints += checkIfScored(crib);
-        computerPoints += score15s(crib);
+        computerPoints += scoreAll(crib);
+        $('#instruction p').text("Crib was worth " + computerPoints + " points for the computer.");
     }
-
-
     setTimeout(function() {
-        computerPoints += checkIfScored(computerPlayed);
-        computerPoints += score15s(computerPlayed);
+        computerPoints += scoreAll(computerPlayed);
         computerScore += computerPoints;
         $('#instruction p').text("Computer scored " + computerPoints + " points.");
+        if (computerScore >= 121){
+            console.log("computer won");
+            drawWinner("computer");
+        } else {}
     }, 1500);
     setTimeout(function() {
-        playerPoints += checkIfScored(playerPlayed);
-        playerPoints += score15s(playerPlayed);
+        playerPoints += scoreAll(playerPlayed);
         playerScore += playerPoints;
         $('#instruction p').text("Player scored " + playerPoints + " points.");
-    }, 1500);
-    drawScore();
-    playerPoints += score15s(playerPlayed);
-    playerScore += playerPoints;
-    drawScore();
-    state = "turnTransitionPhase";
-    gameSequence();
+        if (playerScore >= 121){
+            console.log("player won");
+            drawWinner("player");
+        } else {
+            drawScore();
+            state = "turnTransitionPhase";
+            setTimeout(gameSequence,2000);
+        }
+    }, 3000);
 }
 
+function drawWinner(whoWon) {
+    $('#instruction p').text(whoWon + " WON!!!");
+}
 
 function scoreOnPlay(cardsPlayed) { // turn this into the function that scores after each card is played.
     var totalScore = 0;
     var pairs = scoreOfAKind(cardsPlayed);
     // var runs = scoreSequence(cardsPlayed);
-    if(cardsPlayed.length > 2){
+    if (cardsPlayed.length > 2) {
         var combos = Combinatorics.combination(cardsPlayed, 3);
         var combo = combos.next();
         while (combo) {
@@ -52,6 +59,19 @@ function scoreOnPlay(cardsPlayed) { // turn this into the function that scores a
 //     console.log(combo);
 // var hand = [1, 2, 2, 3, 3];
 
+function scoreAll(hand) {
+    var points = 0;
+    points += scoreOfAKind(hand);
+    points += score15s(hand);
+    var combos = Combinatorics.combination(hand, 3);
+    var combo = combos.next();
+    while (combo) {
+        var score = scoreSequence(combo);
+        points += score;
+        combo = combos.next();
+    }
+    return points;
+}
 
 
 
@@ -79,7 +99,7 @@ function scoreOfAKind(cards) { //might have trouble for the in play portion
 
 function score15s(cards) { // grabs binary position representation of 2 or more cards and then adds them, if they equal 15, then score 2 points, returning totall points.
     var points = 0;
-    for (var combo = 1; combo <= ((2**cards.length)-1); combo++) { //jshint ignore:line
+    for (var combo = 1; combo <= ((2 ** cards.length) - 1); combo++) { //jshint ignore:line
         var sum = 0;
         for (var pos = 0; pos <= cards.length; pos++) {
             if (((combo >> pos) & 1) == 1) {
@@ -93,12 +113,12 @@ function score15s(cards) { // grabs binary position representation of 2 or more 
 
 function scoreSequence(cards) {
     cards.sort(function(a, b) {
-            return a.rank - b.rank;
-        });
-        for (var i = 0; i < cards.length - 1; i++) {
-            if (cards[i].rank + 1 != cards[i + 1].rank) {
-                return false;
-            }
+        return a.rank - b.rank;
+    });
+    for (var i = 0; i < cards.length - 1; i++) {
+        if (cards[i].rank + 1 != cards[i + 1].rank) {
+            return false;
         }
-        return true;
     }
+    return true;
+}
