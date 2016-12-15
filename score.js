@@ -1,44 +1,74 @@
 function scoringPhase() { // this should be called when play phase is over and we need to score the 3 sets of hands.
-    computerPlayed = JSON.parse(localStorage.getItem('computerCards'));
-    playerPlayed = JSON.parse(localStorage.getItem('playerCards'));
-    computerPlayed.push(communityCard);
-    playerPlayed.push(communityCard);
-    var computerPoints = 0;
-    var playerPoints = 0;
-    if (cribOwner == "player") {
-        playerPoints += scoreAll(crib);
-        $('#instruction p').text("Crib was worth " + playerPoints + " points for the player.");
-    } else if (cribOwner == "computer"){
-        computerPoints += scoreAll(crib);
-        $('#instruction p').text("Crib was worth " + computerPoints + " points for the computer.");
-    } else {
-        console.log("error with cribOwner variable");
+    if (cribOwner == "computer") {
+        state = "scorePlayerPhase";
+        gameSequence();
+    } else if (cribOwner == "player") {
+        state = "scoreComputerPhase";
+        gameSequence();
     }
-    setTimeout(function() {
-        computerPoints += scoreAll(computerPlayed);
-        computerScore += computerPoints;
-        console.log("Computer scored " + computerPoints + " points.");
-        $('#instruction p').text("Computer scored " + computerPoints + " points.");
-        if (computerScore >= 121){
-            console.log("computer won");
-            findWinner("computer");
-            return false;
-        } else {}
-    }, 1500);
-    setTimeout(function() {
-        playerPoints += scoreAll(playerPlayed);
-        playerScore += playerPoints;
-        console.log("Player scored " + playerPoints + " points.");
-        $('#instruction p').text("Player scored " + playerPoints + " points.");
-        findWinner("player");
-        drawScore();
-        state = "turnTransitionPhase";
-        setTimeout(gameSequence,2000);
-
-    }, 3000);
 }
 
-function findWinner(whoWon) {
+function scoreCrib() {
+    var computerPoints = 0;
+    var playerPoints = 0;
+    if (cribOwner == "computer") {
+        computerPoints += scoreAll(crib);
+        $('#instruction p').text("Crib was worth " + computerPoints + " points for the computer.");
+        findWinner();
+    } else if (cribOwner == "player") {
+        playerPoints += scoreAll(crib);
+        console.log("player's crib was worth " + playerPoints);
+        $('#instruction p').text("Crib was worth " + playerPoints + " points for the player.");
+    } else {
+        //go to next phase
+    }
+}
+
+function scorePlayerPhase() {
+    playerPlayed = JSON.parse(localStorage.getItem('playerCards'));
+    playerPlayed.push(communityCard);
+    var playerPoints = 0;
+    playerPoints += scoreAll(playerPlayed);
+    playerScore += playerPoints;
+    console.log("Player scored " + playerPoints + " points.");
+    $('#instruction p').text("Player scored " + playerPoints + " points.");
+    findWinner();
+    drawScore();
+    setTimeout(function() {
+        if (cribOwner == "computer") {
+            state = "scoreComputerPhase";
+            gameSequence();
+        } else {
+            scoreCrib();
+            state = "turnTransitionPhase";
+            setTimeout(gameSequence, 2000);
+        }
+    }, 1500);
+}
+
+function scoreComputerPhase() {
+    computerPlayed = JSON.parse(localStorage.getItem('computerCards'));
+    computerPlayed.push(communityCard);
+    var computerPoints = 0;
+    computerPoints += scoreAll(computerPlayed);
+    computerScore += computerPoints;
+    console.log("Computer scored " + computerPoints + " points.");
+    $('#instruction p').text("Computer scored " + computerPoints + " points.");
+    findWinner();
+    drawScore();
+    setTimeout(function() {
+        if (cribOwner == "player") {
+            state = "scorePlayerPhase";
+            gameSequence();
+        } else {
+            scoreCrib();
+            state = "turnTransitionPhase";
+            setTimeout(gameSequence, 2000);
+        }
+    }, 1500);
+}
+
+function findWinner() {
     // drawScore();
     // $('#instruction p').text(whoWon + " WON!!!");
     // return false;

@@ -2,7 +2,7 @@ function playerPlayCard() {
     if (turn == "computer") {
         return false;
     } else if (state !== "playerGo") {
-        if (playerHand[playerSelection].value + totalInPlay() > 32) {
+        if (playerHand[playerSelection].value + totalInPlay() > 31) {
             $('#instruction p ').text('Unable to play that card, choose another one');
             playerTurn();
             return false;
@@ -18,7 +18,7 @@ function playerPlayCard() {
             gameSequence();
         }
     } else {
-        if (playerHand[playerSelection].value + totalInPlay() > 32) {
+        if (playerHand[playerSelection].value + totalInPlay() > 31) {
             $('#instruction p ').text('Unable to play that card, choose another one');
             playerTurn();
         } else {

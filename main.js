@@ -44,6 +44,10 @@ function gameSequence() { // game flow controller
         scoringPhase();
     } else if (state == "turnTransitionPhase"){
         turnTransitionPhase();
+    } else if (state == "scorePlayerPhase"){
+        scorePlayerPhase();
+    } else if (state == "scoreComputerPhase"){
+        scoreComputerPhase();
     }
 }
 

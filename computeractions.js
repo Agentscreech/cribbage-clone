@@ -1,7 +1,7 @@
 function computerPlayCard() {
     //make the computer play a card at random
     var cardToPlay = Math.floor(Math.random() * computerHand.length);
-    if ((computerHand[cardToPlay].value + totalInPlay()) > 32) {
+    if ((computerHand[cardToPlay].value + totalInPlay()) > 31) {
         console.log('Computer picked an invalid card');
         computerPlayCard();
     } else {
