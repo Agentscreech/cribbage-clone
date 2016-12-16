@@ -1,5 +1,5 @@
 function playerPlayCard() {
-    if (turn == "computer") {
+    if (turn == "computer") { //jump out if it's still the computer's turn
         return false;
     } else if (state !== "playerGo") {
         if (playerHand[playerSelection].value + totalInPlay() > 31) {
@@ -11,11 +11,14 @@ function playerPlayCard() {
             playerHand.splice(playerSelection, 1);
             $('#cardsplayed p').text(totalInPlay());
             drawCards();
-            // scoreOnPlay();
-            swapTurn();
-            state = "playPhase";
-            gameSequence();
-            playerClicked = 0;
+            playerScore += scoreOnPlay(cardsPlayed);
+            drawScore();
+            if (!findWinner()) {
+                swapTurn();
+                state = "playPhase";
+                gameSequence();
+                playerClicked = 0;
+            }
         }
     } else {
         if (playerHand[playerSelection].value + totalInPlay() > 31) {
@@ -26,17 +29,16 @@ function playerPlayCard() {
             playerHand.splice(playerSelection, 1);
             $('#cardsplayed p').text(totalInPlay());
             drawCards();
-            // scoreOnPlay();
-            computerSaidGo();
-            playerClicked = 0;
+            playerScore += scoreOnPlay(cardsPlayed);
+            drawScore();
+            if (!findWinner()) {
+                computerSaidGo();
+                playerClicked = 0;
+            }
         }
 
     }
 }
-// for (i = 0; i < playerHand.length; i++) {
-//     $("#p1c" + i).off('click');
-// }
-
 
 function playerTurn() {
     //this is what will happen when it's the players turn

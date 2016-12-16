@@ -7,6 +7,8 @@ function scoringPhase() { // this should be called when play phase is over and w
         gameSequence();
     }
     showCrib();
+    $('#cardsplayed img').remove();
+    $('#cardsplayed p').text("");
 }
 
 function scoreCrib() {
@@ -105,21 +107,44 @@ function findWinner() {
 }
 
 function scoreOnPlay(cardsPlayed) { // turn this into the function that scores after each card is played.
-    var totalScore = 0;
-    var pairs = scoreOfAKind(cardsPlayed);
-    // var runs = scoreSequence(cardsPlayed);
-    if (cardsPlayed.length > 2) {
-        var combos = Combinatorics.combination(cardsPlayed, 3);
-        var combo = combos.next();
-        while (combo) {
-            var score = scoreSequence(combo);
-            totalScore += score;
-            combo = combos.next();
+    if (cardsPlayed === undefined) {
+        return 0;
+    }
+    var tempArray = [];
+    var points = 0;
+    if (totalInPlay() == 15) {
+        points += 2;
+    }
+    if (totalInPlay() == 31) {
+        points++;
+    }
+    if (cardsPlayed.length > 2){
+        tempArray.push(cardsPlayed[cardsPlayed.length - 1], cardsPlayed[cardsPlayed.length - 2], cardsPlayed[cardsPlayed.length - 3]);
+        points += scoreSequence(tempArray);
+    }
+    if (cardsPlayed.length > 1) {
+        if (cardsPlayed[cardsPlayed.length - 1].name == cardsPlayed[cardsPlayed.length - 2].name) {
+            points += 2;
+            if (cardsPlayed.length > 2) {
+                if (cardsPlayed[cardsPlayed.length - 2].name == cardsPlayed[cardsPlayed.length - 3].name) {
+                    points += 4;
+                    if (cardsPlayed.length > 3)
+                        if (cardsPlayed[cardsPlayed.length - 3].name == cardsPlayed[cardsPlayed.length - 4].name) {
+                            points += 6;
+                    }
+                }
+            }
         }
     }
-    totalScore += pairs;
-    return totalScore;
+    console.log(points + " awarded for that play");
+    return points;
 }
+
+
+
+
+
+
 
 
 function scoreAll(hand) {

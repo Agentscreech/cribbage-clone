@@ -9,10 +9,14 @@ function computerPlayCard() {
         computerHand.splice(cardToPlay, 1);
         drawCards();
         $('#cardsplayed p').text(totalInPlay());
-        //scoreOnPlay();
-        swapTurn();
-        state = "playPhase";
-        gameSequence();
+        computerScore += scoreOnPlay(cardsPlayed);
+        drawScore();
+        if (!findWinner()) {
+            swapTurn();
+            state = "playPhase";
+            gameSequence();
+
+        }
     }
 }
 
@@ -21,7 +25,7 @@ function computerTurn() {
     if (!ableToPlay()) {
         swapTurn();
         $('#instruction p').text("Computer can not make a move, it says 'GO'");
-        computerSaidGo();
+        setTimeout(computerSaidGo, 1500);
     } else {
         computerPlayCard();
     }
@@ -34,8 +38,11 @@ function playerSaidGo() {
         computerHand.splice(0, 1);
         drawCards();
         $('#cardsplayed p').text(totalInPlay());
-        // scoreOnPlay();
-        setTimeout(playerSaidGo, 1500);
+        computerScore += scoreOnPlay();
+        drawScore();
+        if (!findWinner()){
+            setTimeout(playerSaidGo, 1500);
+        }
     } else {
         computerScore += 1;
         drawScore();
