@@ -15,6 +15,7 @@ function playerPlayCard() {
             swapTurn();
             state = "playPhase";
             gameSequence();
+            playerClicked = 0;
         }
     } else {
         if (playerHand[playerSelection].value + totalInPlay() > 31) {
@@ -27,6 +28,7 @@ function playerPlayCard() {
             drawCards();
             // scoreOnPlay();
             computerSaidGo();
+            playerClicked = 0;
         }
 
     }
@@ -55,19 +57,21 @@ function computerSaidGo() {
     state = "playerGo";
     console.log("computer said Go");
     if (ableToPlay()) {
+        playerClicked = 0;
         playerTurn();
     } else {
         playerScore += 1;
-        findWinner();
         drawScore();
-        console.log("player scored from Go, Score is "+ playerScore);
-        setTimeout(function() {
-            $('#instruction p').text("Player scores 1 for the Go/Last");
-        }, 1000);
-        state = "resetPlayPhase";
-        console.log("player can't go, resetting play phase");
-        $('#instruction p').text("You can no longer make a move, the round is over");
-        setTimeout(gameSequence, 1000);
-    }
+        if (!findWinner()) {
+            console.log("player scored from Go, Score is " + playerScore);
+            setTimeout(function() {
+                $('#instruction p').text("Player scores 1 for the Go/Last");
+            }, 1000);
+            state = "resetPlayPhase";
+            console.log("player can't go, resetting play phase");
+            $('#instruction p').text("You can no longer make a move, the round is over");
+            setTimeout(gameSequence, 1000);
+        }
 
+    }
 }

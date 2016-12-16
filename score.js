@@ -9,6 +9,9 @@ function scoringPhase() { // this should be called when play phase is over and w
 }
 
 function scoreCrib() {
+    if (findWinner()) {
+        return;
+    }
     var computerPoints = 0;
     var playerPoints = 0;
     crib.push(communityCard);
@@ -17,12 +20,13 @@ function scoreCrib() {
         computerScore += computerPoints;
         console.log("computer crib was worth " + computerPoints);
         $('#instruction p').text("Crib was worth " + computerPoints + " points for the computer.");
-        findWinner();
+        drawScore();
     } else if (cribOwner == "player") {
         playerPoints += scoreAll(crib);
         playerScore += playerPoints;
         console.log("player's crib was worth " + playerPoints);
         $('#instruction p').text("Crib was worth " + playerPoints + " points for the player.");
+        drawScore();
     } else {
         //go to next phase
     }
@@ -36,21 +40,22 @@ function scorePlayerPhase() {
     playerScore += playerPoints;
     console.log("Player scored " + playerPoints + " points.");
     $('#instruction p').text("Player scored " + playerPoints + " points.");
-    findWinner();
     drawScore();
-    console.log("player scored from their Hand, score is " + playerScore);
-    setTimeout(function() {
-        if (cribOwner == "computer") {
-            state = "scoreComputerPhase";
-            gameSequence();
-        } else {
-            scoreCrib();
-            setTimeout(function() {
-                state = "turnTransitionPhase";
+    if (!findWinner()) {
+        console.log("player scored from their Hand, score is " + playerScore);
+        setTimeout(function() {
+            if (cribOwner == "computer") {
+                state = "scoreComputerPhase";
                 gameSequence();
-            }, 4000);
-        }
-    }, 1500);
+            } else {
+                scoreCrib();
+                setTimeout(function() {
+                    state = "turnTransitionPhase";
+                    gameSequence();
+                }, 4000);
+            }
+        }, 1500);
+    }
 }
 
 function scoreComputerPhase() {
@@ -61,25 +66,38 @@ function scoreComputerPhase() {
     computerScore += computerPoints;
     console.log("Computer scored " + computerPoints + " points.");
     $('#instruction p').text("Computer scored " + computerPoints + " points.");
-    findWinner();
     drawScore();
-    console.log("computer scored from their Hand, score is " + computerScore);
-    setTimeout(function() {
-        if (cribOwner == "player") {
-            state = "scorePlayerPhase";
-            gameSequence();
-        } else {
-            scoreCrib();
-            setTimeout(function() {
-                state = "turnTransitionPhase";
+    if (!findWinner()) {
+        console.log("computer scored from their Hand, score is " + computerScore);
+        setTimeout(function() {
+            if (cribOwner == "player") {
+                state = "scorePlayerPhase";
                 gameSequence();
-            }, 4000);
-        }
-    }, 1500);
+            } else {
+                scoreCrib();
+                setTimeout(function() {
+                    state = "turnTransitionPhase";
+                    gameSequence();
+                }, 4000);
+            }
+        }, 1500);
+    }
 }
 
 function findWinner() {
-
+    if (computerScore >= 121) {
+        console.log("computer has won");
+        state = "computerWon";
+        gameSequence();
+        return true;
+    } else if (playerScore >= 121) {
+        state = "playerWon";
+        console.log("player has won");
+        gameSequence();
+        return true;
+    } else {
+        return false;
+    }
 
 }
 
@@ -103,6 +121,7 @@ function scoreOnPlay(cardsPlayed) { // turn this into the function that scores a
 
 function scoreAll(hand) {
     var points = 0;
+    points += scoreFlush(hand);
     points += scoreOfAKind(hand);
     points += score15s(hand);
     var combos = Combinatorics.combination(hand, 3);
@@ -115,6 +134,18 @@ function scoreAll(hand) {
     return points;
 }
 
+function scoreFlush(hand) {
+    var points = 0;
+    if (hand[0].suit == hand[1].suit && hand[0].suit == hand[2].suit && hand[0].suit == hand[3].suit && hand[0].suit == hand[4].suit) {
+        points += 5;
+        return points;
+    } else if (hand[0].suit == hand[1].suit && hand[0].suit == hand[2].suit && hand[0].suit == hand[3].suit) {
+        points += 4;
+        return points;
+    } else {
+        return 0;
+    }
+}
 
 
 

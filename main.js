@@ -10,6 +10,7 @@ var cardsPlayed = [];
 var cribOwner = "";
 var state = "";
 var playerSelection;
+var playerClicked = 0;
 $(document).ready(function() {
     drawPegs();
     resetBoard();
@@ -26,28 +27,50 @@ function gameSequence() { // game flow controller
         $('#deckspot').empty();
         $('#deckspot').append('<img src="img/cards/back-of-deck.png" alt="">');
         //make board ready to deal
-        dealCards();
+        if (!findWinner()) {
+            dealCards();
+        }
     } else if (state == "fillCrib") {
         //make board ready to fillCrib
-        fillCrib();
+        if (!findWinner()) {
+            fillCrib();
+        }
     } else if (state == "pickCommunityCard") {
         //make board ready to pickCommunityCard
         localStorage.setItem('playerCards', JSON.stringify(playerHand));
         localStorage.setItem('computerCards', JSON.stringify(computerHand));
-        pickCommunityCard();
+        if (!findWinner()) {
+            pickCommunityCard();
+        }
     } else if (state == "playPhase") {
         //make board ready for playPhase
-        playPhase();
+        if (!findWinner()) {
+            playPhase();
+        }
     } else if (state == "resetPlayPhase") {
-        resetPlayPhase();
-    } else if (state == "scoringPhase"){
-        scoringPhase();
-    } else if (state == "turnTransitionPhase"){
-        turnTransitionPhase();
-    } else if (state == "scorePlayerPhase"){
-        scorePlayerPhase();
-    } else if (state == "scoreComputerPhase"){
-        scoreComputerPhase();
+        if (!findWinner()) {
+            resetPlayPhase();
+        }
+    } else if (state == "scoringPhase") {
+        if (!findWinner()) {
+            scoringPhase();
+        }
+    } else if (state == "turnTransitionPhase") {
+        if (!findWinner()) {
+            turnTransitionPhase();
+        }
+    } else if (state == "scorePlayerPhase") {
+        if (!findWinner()) {
+            scorePlayerPhase();
+        }
+    } else if (state == "scoreComputerPhase") {
+        if (!findWinner()) {
+            scoreComputerPhase();
+        }
+    } else if (state == "computerWon") {
+        $('#instruction p').text('The Computer has WON!!!');
+    } else if (state == "playerWon") {
+        $('#instruction p').text('YOU WON!!!');
     }
 }
 
@@ -55,6 +78,7 @@ function dealerSelector() { //something's funky with this when it's a tie TODO l
     var computerCard = deck[Math.floor(Math.random() * 52)];
     $('#deckspot').prepend('<img src="img/cards/' + computerCard.name + '_of_' + computerCard.suit + '.png">');
     $('#instruction p').text("Computer has selected " + computerCard.name + ' of ' + computerCard.suit + ".");
+    $('#deckspot').off('click');
     setTimeout(function() {
         var playerCard = deck[Math.floor(Math.random() * 52)];
         var text = "";
@@ -69,7 +93,6 @@ function dealerSelector() { //something's funky with this when it's a tie TODO l
                 $('#upper p').text("Your Crib");
                 cribOwner = "player";
                 swapTurn();
-                $('#deckspot').off('click');
                 setTimeout(function() {
                     state = "deal";
                     gameSequence();
@@ -148,12 +171,16 @@ function pickCommunityCard() {
                 $('#instruction p').text("A Jack was drawn, two for his heels");
                 if (turn == "player") {
                     computerScore += 2;
-                    findWinner();
+                    if (findWinner()){
+                        return;
+                    }
                     drawScore();
                     console.log("computer scored from Heels, score is " + computerScore);
                 } else {
                     playerScore += 2;
-                    findWinner();
+                    if (findWinner()){
+                        return;
+                    }
                     console.log("player scored from Heels, score is " + playerScore);
                     drawScore();
                 }
@@ -167,6 +194,7 @@ function pickCommunityCard() {
         $('#instruction p').text("Pick a community card");
         $('#deckspot').click(function() {
             communityCard = deck[Math.floor(Math.random() * deck.length)];
+            $('#deckspot').off('click');
             setTimeout(function() {
                 if (communityCard.name == "jack") {
                     $('#instruction p').text("A Jack was drawn, two for his heels");
@@ -178,7 +206,7 @@ function pickCommunityCard() {
                     } else {
                         playerScore += 2;
                         findWinner();
-                        console.log("player scored from Heels, score is " +playerScore);
+                        console.log("player scored from Heels, score is " + playerScore);
                         drawScore();
                     }
                 }
@@ -198,6 +226,7 @@ function playPhase() {
         if (turn == "computer") {
             computerTurn();
         } else if (turn == "player") {
+            playerClicked = 0;
             playerTurn();
         } else {
             console.log('turn variable is FUBAR');
@@ -220,17 +249,24 @@ function resetPlayPhase() {
     }
 }
 
-function cardPlayerClicked() {
-    //set the click handlers based on current state
+function cardPlayerClicked() { // there is a bug here where if you click fast enough, it sends multiple calls to the target function.
+    if (playerClicked == 1){
+        return;
+    }
+    playerClicked = 1;
     var id = event.target.parentElement.id;
     var cardPicked = id.substr(id.length - 1);
     console.log("player chose to play " + playerHand[cardPicked].name);
     playerSelection = cardPicked;
+    setTimeout(function() {
+        playerClicked = 0;
+    }, 1000);
     if (state == "fillCrib") {
+        playerClicked = 0;
         sendToCrib();
-    } else if (state == "playPhase") {
+    } else if (state == "playPhase" && playerClicked == 1) {
         playerPlayCard();
-    } else if (state == "playerGo"){
+    } else if (state == "playerGo" && playerClicked == 1) {
         playerPlayCard();
     }
 
@@ -252,7 +288,6 @@ function totalInPlay() {
     }
     return sum;
 }
-
 
 
 function turnTransitionPhase() {
@@ -299,9 +334,6 @@ function ableToPlay() {
 
 }
 
-
-
-
 function resetBoard() {
     deck = buildDeck();
     shuffle(deck);
@@ -315,12 +347,5 @@ function resetBoard() {
     state = "pickPlayer";
     gameSequence();
 }
-
-
-
-
-
-
-
 
 // $('#p1c0').append('<img src="img/cards/' + test[0].rank + '_of_' + test[0].suit +'.png">'); //this draws the target card

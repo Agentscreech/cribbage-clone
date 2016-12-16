@@ -38,15 +38,16 @@ function playerSaidGo() {
         setTimeout(playerSaidGo, 1500);
     } else {
         computerScore += 1;
-        findWinner();
         drawScore();
-        console.log("computer scored from Go, score is " +computerScore);
-        setTimeout(function (){
-            $('#instruction p').text("Computer scores 1 for the Go/Last");
-        },1000);
-        state = "resetPlayPhase";
-        console.log("computer can't go, resetting play phase");
-        $('#instruction p').text("Computer can no longer make a move, the round is over");
-        setTimeout(gameSequence, 1000);
+        if (!findWinner()) {
+            console.log("computer scored from Go, score is " + computerScore);
+            setTimeout(function() {
+                $('#instruction p').text("Computer scores 1 for the Go/Last");
+            }, 1000);
+            state = "resetPlayPhase";
+            console.log("computer can't go, resetting play phase");
+            $('#instruction p').text("Computer can no longer make a move, the round is over");
+            setTimeout(gameSequence, 1000);
+        }
     }
 }
