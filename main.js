@@ -107,9 +107,9 @@ function dealerSelector() { //something's funky with this when it's a tie TODO l
                     gameSequence();
                 }, 1500);
             }
-        }, 2000);
+        }, 1500);
 
-    }, 2500);
+    }, 2000);
 }
 
 function dealCards() {
@@ -165,7 +165,7 @@ function sendToCrib() {
 }
 
 function pickCommunityCard() {
-    if (turn == "computer") {
+    if (cribOwner == "player") {
         $('#instruction p').text("Computer is picking a community card");
         communityCard = deck[Math.floor(Math.random() * deck.length)];
         setTimeout(function() {

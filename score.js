@@ -120,7 +120,9 @@ function scoreOnPlay(cardsPlayed) { // turn this into the function that scores a
     }
     if (cardsPlayed.length > 2){
         tempArray.push(cardsPlayed[cardsPlayed.length - 1], cardsPlayed[cardsPlayed.length - 2], cardsPlayed[cardsPlayed.length - 3]);
-        points += scoreSequence(tempArray);
+        if(scoreSequence(tempArray)){
+            points += 3;
+        }
     }
     if (cardsPlayed.length > 1) {
         if (cardsPlayed[cardsPlayed.length - 1].name == cardsPlayed[cardsPlayed.length - 2].name) {
@@ -149,6 +151,11 @@ function scoreOnPlay(cardsPlayed) { // turn this into the function that scores a
 
 function scoreAll(hand) {
     var points = 0;
+    for (i=0;i<hand.length;i++){
+        if (hand[i].name == "jack" && hand[i].suit == communityCard.suit){ //checks for "nobs" point (you have the jack of the suit that was drawn)
+            points++;
+        }
+    }
     points += scoreFlush(hand);
     points += scoreOfAKind(hand);
     points += score15s(hand);
