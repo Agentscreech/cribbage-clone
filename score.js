@@ -6,6 +6,7 @@ function scoringPhase() { // this should be called when play phase is over and w
         state = "scoreComputerPhase";
         gameSequence();
     }
+    showCrib();
 }
 
 function scoreCrib() {
@@ -34,6 +35,7 @@ function scoreCrib() {
 
 function scorePlayerPhase() {
     playerPlayed = JSON.parse(localStorage.getItem('playerCards'));
+    drawPlayer(playerPlayed);
     playerPlayed.push(communityCard);
     var playerPoints = 0;
     playerPoints += scoreAll(playerPlayed);
@@ -60,6 +62,7 @@ function scorePlayerPhase() {
 
 function scoreComputerPhase() {
     computerPlayed = JSON.parse(localStorage.getItem('computerCards'));
+    drawComputer(computerPlayed);
     computerPlayed.push(communityCard);
     var computerPoints = 0;
     computerPoints += scoreAll(computerPlayed);

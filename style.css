@@ -57,7 +57,7 @@ img{
 .cardbox {
     width: 80px;
     height: 120px;
-    border: 1px solid;
+    /*border: 1px solid;*/
     margin: 5px 5px;
     display: flex;
     justify-content: space-between;

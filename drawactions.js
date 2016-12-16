@@ -1,5 +1,4 @@
 function drawCards() {
-    $('#cribhome img').remove();
     $('#cardrow img').remove();
     $('#communitycard img').remove();
     $('#cardsplayed img').remove();
@@ -7,11 +6,9 @@ function drawCards() {
         $('#p1c' + i).append('<img src="img/cards/' + playerHand[i].name + '_of_' + playerHand[i].suit + '.png">');
     }
     for (i = 0; i < computerHand.length; i++) {
-        $('#p2c' + i).append('<img src="img/cards/' + computerHand[i].name + '_of_' + computerHand[i].suit + '.png">');
+        $('#p2c' + i).append('<img src="img/cards/back-of-deck.png">');
     }
-    for (j = 0; j < crib.length; j++) {
-        $('#crib' + j).append('<img src="img/cards/' + crib[j].name + '_of_' + crib[j].suit + '.png">');
-    }
+
     for (k = 0; k < cardsPlayed.length; k++) {
         $('#cp' + k).append('<img src="img/cards/' + cardsPlayed[k].name + '_of_' + cardsPlayed[k].suit + '.png">');
 
@@ -21,7 +18,31 @@ function drawCards() {
     }
 }
 
+function showCrib(){
+    $('#cribhome img').remove();
+    for (j = 0; j < crib.length; j++) {
+        $('#crib' + j).append('<img src="img/cards/' + crib[j].name + '_of_' + crib[j].suit + '.png">');
+    }
+}
 
+function hideCrib(){
+    $('#cribhome img').remove();
+    for (j = 0; j < crib.length; j++) {
+        $('#crib' + j).append('<img src="img/cards/back-of-deck.png">');
+    }
+}
+
+function drawComputer (computerHand){
+    for (i = 0; i < computerHand.length; i++) {
+        $('#p2c' + i).append('<img src="img/cards/' + computerHand[i].name + '_of_' + computerHand[i].suit + '.png">');
+    }
+}
+
+function drawPlayer(playerHand){
+    for (i = 0; i < playerHand.length; i++) {
+        $('#p1c' + i).append('<img src="img/cards/' + playerHand[i].name + '_of_' + playerHand[i].suit + '.png">');
+    }
+}
 
 function drawScore() {
     drawPegs();

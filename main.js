@@ -142,6 +142,7 @@ function fillCrib() {
     crib.push(computerHand[computerCrib1]);
     computerHand.splice(computerCrib1, 1);
     drawCards();
+    hideCrib();
     for (i = 0; i < playerHand.length; i++) {
         $("#p1c" + i).click(cardPlayerClicked);
     }
@@ -154,6 +155,7 @@ function sendToCrib() {
     drawCards();
     if (crib.length == 4) {
         drawCards();
+        hideCrib();
         for (i = 0; i < playerHand.length; i++) {
             $("#p1c" + i).off('click');
         }
@@ -250,9 +252,9 @@ function resetPlayPhase() {
 }
 
 function cardPlayerClicked() { // there is a bug here where if you click fast enough, it sends multiple calls to the target function.
-    if (playerClicked == 1){
-        return;
-    }
+    // if (playerClicked == 1){
+    //     return;
+    // }
     playerClicked = 1;
     var id = event.target.parentElement.id;
     var cardPicked = id.substr(id.length - 1);
