@@ -33,6 +33,12 @@ img{
     justify-content: space-between;
     border: 1px solid;
 }
+#instruction {
+    display: flex;
+}
+#p1score {
+    display: flex;
+}
 #p2score {
     display: flex;
 }
@@ -97,4 +103,13 @@ img{
     display: flex;
     width: 260px;
     justify-content: space-between;;
+}
+
+.text {
+    display: flex;
+    font-size: 18pt;
+    text-align: center;
+    align-items: center;
+    color: #FFF;
+    text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
 }

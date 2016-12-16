@@ -163,7 +163,7 @@ function scoreAll(hand) {
     var combo = combos.next();
     while (combo) {
         var score = scoreSequence(combo);
-        points += score;
+        points += score * 3;
         combo = combos.next();
     }
     return points;
