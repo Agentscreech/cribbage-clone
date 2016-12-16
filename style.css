@@ -43,7 +43,7 @@ img{
     display: flex;
 }
 #playarea {
-    background-color: green;
+    background: url('img/checkers-texture-game.png');
 }
 #cardrow{
     display: flex;
