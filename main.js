@@ -1,3 +1,4 @@
+// global variables
 var deck = {};
 var turn = "player";
 var playerHand = [];
@@ -16,7 +17,9 @@ $(document).ready(function() {
     resetBoard();
 });
 
-function gameSequence() { // game flow controller
+
+// game flow controller
+function gameSequence() {
     if (state == "pickPlayer") {
         //make board ready to select a dealer
         $('#instruction p').text("Please click the deck to have each player select a card at random");
@@ -24,9 +27,9 @@ function gameSequence() { // game flow controller
         $('#deckspot').append('<img src="img/cards/back-of-deck.png" alt="">');
         $('#deckspot').click(dealerSelector);
     } else if (state == "deal") {
+
         $('#deckspot').empty();
         $('#deckspot').append('<img src="img/cards/back-of-deck.png" alt="">');
-        //make board ready to deal
         if (!findWinner()) {
             dealCards();
         }
@@ -74,7 +77,8 @@ function gameSequence() { // game flow controller
     }
 }
 
-function dealerSelector() { //something's funky with this when it's a tie TODO look into this.
+// determin who goes first
+function dealerSelector() {
     var computerCard = deck[Math.floor(Math.random() * 52)];
     $('#deckspot').prepend('<img src="img/cards/' + computerCard.name + '_of_' + computerCard.suit + '.png">');
     $('#instruction p').text("Computer has selected " + computerCard.name + ' of ' + computerCard.suit + ".");
@@ -112,6 +116,7 @@ function dealerSelector() { //something's funky with this when it's a tie TODO l
     }, 2000);
 }
 
+//make deck, deal cards, sort by lowest to highest
 function dealCards() {
     deck = {};
     deck = buildDeck();
@@ -133,6 +138,8 @@ function dealCards() {
     gameSequence();
 }
 
+
+//computer randomly picks 2 cards to add to crib, assign click event to player cards.
 function fillCrib() {
     $('#instruction p').text("Pick two cards to send to the crib.");
     var computerCrib0 = Math.floor(Math.random() * computerHand.length);
@@ -148,10 +155,10 @@ function fillCrib() {
     }
 }
 
+//player adds 2 cards to crib, then remove click event.
 function sendToCrib() {
     crib.push(playerHand[playerSelection]);
     playerHand.splice(playerSelection, 1);
-    // $(event.target).remove('img')
     drawCards();
     if (crib.length == 4) {
         drawCards();
@@ -164,6 +171,7 @@ function sendToCrib() {
     }
 }
 
+//randomly pick a card as the community card.  Score if it's a Jack
 function pickCommunityCard() {
     if (cribOwner == "player") {
         $('#instruction p').text("Computer is picking a community card");
@@ -221,8 +229,8 @@ function pickCommunityCard() {
     }
 }
 
+//calls other js files depending on who's turn it is
 function playPhase() {
-    // var lastPlayed = "";
     setTimeout(function() {
         $('#instruction p').text(turn + "'s turn to play a card");
         if (turn == "computer") {
@@ -236,6 +244,8 @@ function playPhase() {
     }, 1500);
 }
 
+
+//once play reaches 31 or no one can play, reset the board, unless hands are empty, then score
 function resetPlayPhase() {
     if (playerHand.length === 0 && computerHand.length === 0) {
         console.log("all cards played, starting scoring");
@@ -251,10 +261,8 @@ function resetPlayPhase() {
     }
 }
 
-function cardPlayerClicked() { // there is a bug here where if you click fast enough, it sends multiple calls to the target function.
-    // if (playerClicked == 1){
-    //     return;
-    // }
+//controls if you click more than once, it shouldn't run more than one time.
+function cardPlayerClicked() {
     playerClicked = 1;
     var id = event.target.parentElement.id;
     var cardPicked = id.substr(id.length - 1);
@@ -264,7 +272,7 @@ function cardPlayerClicked() { // there is a bug here where if you click fast en
         playerClicked = 0;
     }, 1000);
     if (state == "fillCrib") {
-        playerClicked = 0;
+        playerClicked = 0;  //allows player to choose more than one card for the crib
         sendToCrib();
     } else if (state == "playPhase" && playerClicked == 1) {
         playerPlayCard();
@@ -274,6 +282,7 @@ function cardPlayerClicked() { // there is a bug here where if you click fast en
 
 }
 
+//changes active player
 function swapTurn() {
     if (turn == "player") {
         turn = "computer";
@@ -283,6 +292,8 @@ function swapTurn() {
     console.log("next turn should be " + turn);
 }
 
+
+// keeps track of cards played running total.
 function totalInPlay() {
     var sum = 0;
     for (i = 0; i < cardsPlayed.length; i++) {
@@ -291,7 +302,7 @@ function totalInPlay() {
     return sum;
 }
 
-
+// resets the board for new round after scoring phase.
 function turnTransitionPhase() {
     console.log("reseting playPhase and setting next player");
     cardsPlayed = [];
@@ -308,13 +319,13 @@ function turnTransitionPhase() {
     }
     $('#cardsplayed p').text("");
     drawScore();
-    // drawCards();
     swapTurn();
     state = "deal";
     gameSequence();
 
 }
 
+//checks to see if any card in a hand can be played.
 function ableToPlay() {
     if (turn == "computer") {
         for (i = 0; i < computerHand.length; i++) {
@@ -335,7 +346,7 @@ function ableToPlay() {
     }
 
 }
-
+//initial setup of the game
 function resetBoard() {
     deck = buildDeck();
     shuffle(deck);
@@ -349,5 +360,3 @@ function resetBoard() {
     state = "pickPlayer";
     gameSequence();
 }
-
-// $('#p1c0').append('<img src="img/cards/' + test[0].rank + '_of_' + test[0].suit +'.png">'); //this draws the target card
