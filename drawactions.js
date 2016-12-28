@@ -1,3 +1,5 @@
+
+//shows the cards as they should be displayed
 function drawCards() {
     $('#cardrow img').remove();
     $('#communitycard img').remove();
@@ -18,6 +20,7 @@ function drawCards() {
     }
 }
 
+//called when it's the player's crib
 function showCrib(){
     $('#cribhome img').remove();
     for (j = 0; j < crib.length; j++) {
@@ -25,6 +28,7 @@ function showCrib(){
     }
 }
 
+//called when it's the computer's crib
 function hideCrib(){
     $('#cribhome img').remove();
     for (j = 0; j < crib.length; j++) {
@@ -32,11 +36,11 @@ function hideCrib(){
     }
 }
 
-function drawComputer (computerHand){
-    for (i = 0; i < computerHand.length; i++) {
-        $('#p2c' + i).append('<img src="img/cards/' + computerHand[i].name + '_of_' + computerHand[i].suit + '.png">');
-    }
-}
+// function drawComputer (computerHand){
+//     for (i = 0; i < computerHand.length; i++) {
+//         $('#p2c' + i).append('<img src="img/cards/' + computerHand[i].name + '_of_' + computerHand[i].suit + '.png">');
+//     }
+// }
 
 function drawPlayer(playerHand){
     for (i = 0; i < playerHand.length; i++) {
@@ -53,7 +57,7 @@ function drawScore() {
 
 }
 
-
+//renders the pegs. starts at the top going left to right, then goes a row down, right to left.
 function drawPegs() {
     $('#p1toprow').empty();
     $('#p2toprow').empty();
@@ -81,6 +85,8 @@ function drawPegs() {
     }
 }
 
+
+//constructor for a card
 function Card(value, name, suit, rank) {
     this.value = value;
     this.name = name;
@@ -88,6 +94,7 @@ function Card(value, name, suit, rank) {
     this.rank = rank;
 }
 
+//builds the deck
 function buildDeck() {
     this.names = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
     this.suits = ['hearts', 'diamonds', 'spades', 'clubs'];
@@ -106,6 +113,7 @@ function buildDeck() {
     return cards;
 }
 
+//Fisher-Yates shuffle algorithm
 function shuffle(array) {
     var numberOfCards = array.length,
         temp, randomCard;

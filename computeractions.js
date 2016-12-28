@@ -1,5 +1,5 @@
+//make the computer play a card at random
 function computerPlayCard() {
-    //make the computer play a card at random
     var cardToPlay = Math.floor(Math.random() * computerHand.length);
     if ((computerHand[cardToPlay].value + totalInPlay()) > 31) {
         console.log('Computer picked an invalid card');
@@ -20,8 +20,8 @@ function computerPlayCard() {
     }
 }
 
+//this is what happens when it's the computer's turn
 function computerTurn() {
-    //this is what happens when it's the computer's turn
     if (!ableToPlay()) {
         swapTurn();
         $('#instruction p').text("Computer can not make a move, it says 'GO'");

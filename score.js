@@ -11,6 +11,8 @@ function scoringPhase() { // this should be called when play phase is over and w
     $('#cardsplayed p').text("");
 }
 
+
+//grabs the carsd in the crib, adds the communityCard then scores it.
 function scoreCrib() {
     if (findWinner()) {
         return;
@@ -35,6 +37,7 @@ function scoreCrib() {
     }
 }
 
+//scores player hand. Refactor idea would be to have this in a window the pops up with a button to continue.
 function scorePlayerPhase() {
     playerPlayed = JSON.parse(localStorage.getItem('playerCards'));
     drawPlayer(playerPlayed);
@@ -62,6 +65,7 @@ function scorePlayerPhase() {
     }
 }
 
+//score computer hand.
 function scoreComputerPhase() {
     computerPlayed = JSON.parse(localStorage.getItem('computerCards'));
     drawComputer(computerPlayed);
@@ -89,6 +93,8 @@ function scoreComputerPhase() {
     }
 }
 
+
+//checks if someone reaches 121 points
 function findWinner() {
     if (computerScore >= 121) {
         console.log("computer has won");
@@ -106,7 +112,8 @@ function findWinner() {
 
 }
 
-function scoreOnPlay(cardsPlayed) { // turn this into the function that scores after each card is played.
+//this is called every time a card is played.
+function scoreOnPlay(cardsPlayed) {
     if (cardsPlayed === undefined) {
         return 0;
     }
@@ -143,12 +150,7 @@ function scoreOnPlay(cardsPlayed) { // turn this into the function that scores a
 }
 
 
-
-
-
-
-
-
+//a score function that calls other scoring functions.
 function scoreAll(hand) {
     var points = 0;
     for (i=0;i<hand.length;i++){
@@ -169,6 +171,7 @@ function scoreAll(hand) {
     return points;
 }
 
+//scores a hand that is a 4 card flush, but only if it was dealt.
 function scoreFlush(hand) {
     var points = 0;
     if (hand[0].suit == hand[1].suit && hand[0].suit == hand[2].suit && hand[0].suit == hand[3].suit && hand[0].suit == hand[4].suit) {
@@ -184,7 +187,7 @@ function scoreFlush(hand) {
 
 
 
-function scoreOfAKind(cards) { //might have trouble for the in play portion
+function scoreOfAKind(cards) {
     var names = [];
     for (i = 0; i < cards.length; i++) { //grabs the names of the cards to compare for pairs and puts it into a new array
         names.push(cards[i].name);
@@ -205,7 +208,7 @@ function scoreOfAKind(cards) { //might have trouble for the in play portion
     return total;
 }
 
-function score15s(cards) { // grabs binary position representation of 2 or more cards and then adds them, if they equal 15, then score 2 points, returning totall points.
+function score15s(cards) { // grabs binary position representation of 2 or more cards and then adds them, if they equal 15, then score 2 points, returning total points.
     var points = 0;
     for (var combo = 1; combo <= ((2 ** cards.length) - 1); combo++) { //jshint ignore:line
         var sum = 0;
@@ -219,6 +222,7 @@ function score15s(cards) { // grabs binary position representation of 2 or more 
     return points;
 }
 
+//sorts cards by smallest to largest and see is they are a run.
 function scoreSequence(cards) {
     cards.sort(function(a, b) {
         return a.rank - b.rank;

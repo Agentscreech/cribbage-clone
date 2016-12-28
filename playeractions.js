@@ -1,7 +1,8 @@
+// allows player to select and play card.
 function playerPlayCard() {
-    if (turn == "computer") { //jump out if it's still the computer's turn
+    if (turn == "computer") { //jump out if it's still the computer's turn, keeps from playing out of turn
         return false;
-    } else if (state !== "playerGo") {
+    } else if (state !== "playerGo") { //the computer has not said go yet
         if (playerHand[playerSelection].value + totalInPlay() > 31) {
             $('#instruction p ').text('Unable to play that card, choose another one');
             playerTurn();
@@ -40,8 +41,8 @@ function playerPlayCard() {
     }
 }
 
+//this is what will happen when it's the players turn.
 function playerTurn() {
-    //this is what will happen when it's the players turn
     if (!ableToPlay()) {
         console.log("player wasn't able to play");
         swapTurn();
@@ -55,6 +56,7 @@ function playerTurn() {
 
 }
 
+//Go phase for the player
 function computerSaidGo() {
     state = "playerGo";
     console.log("computer said Go");
