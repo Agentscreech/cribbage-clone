@@ -36,11 +36,11 @@ function hideCrib(){
     }
 }
 
-// function drawComputer (computerHand){
-//     for (i = 0; i < computerHand.length; i++) {
-//         $('#p2c' + i).append('<img src="img/cards/' + computerHand[i].name + '_of_' + computerHand[i].suit + '.png">');
-//     }
-// }
+function drawComputer (computerHand){
+    for (i = 0; i < computerHand.length; i++) {
+        $('#p2c' + i).append('<img src="img/cards/' + computerHand[i].name + '_of_' + computerHand[i].suit + '.png">');
+    }
+}
 
 function drawPlayer(playerHand){
     for (i = 0; i < playerHand.length; i++) {

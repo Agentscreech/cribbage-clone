@@ -2,7 +2,6 @@
 function computerPlayCard() {
     var cardToPlay = Math.floor(Math.random() * computerHand.length);
     if ((computerHand[cardToPlay].value + totalInPlay()) > 31) {
-        console.log('Computer picked an invalid card');
         computerPlayCard();
     } else {
         cardsPlayed.push(computerHand[cardToPlay]);
@@ -32,7 +31,6 @@ function computerTurn() {
 }
 
 function playerSaidGo() {
-    console.log("player said go");
     if (ableToPlay()) {
         cardsPlayed.push(computerHand[0]); //forces computer to play it's smallest value card
         computerHand.splice(0, 1);
@@ -47,12 +45,10 @@ function playerSaidGo() {
         computerScore += 1;
         drawScore();
         if (!findWinner()) {
-            console.log("computer scored from Go, score is " + computerScore);
             setTimeout(function() {
                 $('#instruction p').text("Computer scores 1 for the Go/Last");
             }, 1000);
             state = "resetPlayPhase";
-            console.log("computer can't go, resetting play phase");
             $('#instruction p').text("Computer can no longer make a move, the round is over");
             setTimeout(gameSequence, 1000);
         }
