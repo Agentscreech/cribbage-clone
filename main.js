@@ -185,18 +185,15 @@ function pickCommunityCard() {
                         return;
                     }
                     drawScore();
-                    console.log("computer scored from Heels, score is " + computerScore);
                 } else {
                     playerScore += 2;
                     if (findWinner()){
                         return;
                     }
-                    console.log("player scored from Heels, score is " + playerScore);
                     drawScore();
                 }
             }
             drawCards();
-            console.log(communityCard.name + " has been selected, drawing cards, trying to enter playPhase next, with " + turn + " going first");
             state = "playPhase";
             gameSequence();
         }, 1500);
@@ -212,17 +209,14 @@ function pickCommunityCard() {
                         computerScore += 2;
                         findWinner();
                         drawScore();
-                        console.log("computer scored from Heels, score is " + computerScore);
                     } else {
                         playerScore += 2;
                         findWinner();
-                        console.log("player scored from Heels, score is " + playerScore);
                         drawScore();
                     }
                 }
             }, 1500);
             drawCards();
-            console.log("communityCard picked, it was " + communityCard.name);
             state = "playPhase";
             gameSequence();
         });
@@ -239,7 +233,6 @@ function playPhase() {
             playerClicked = 0;
             playerTurn();
         } else {
-            console.log('turn variable is FUBAR');
         }
     }, 1500);
 }
@@ -248,7 +241,6 @@ function playPhase() {
 //once play reaches 31 or no one can play, reset the board, unless hands are empty, then score
 function resetPlayPhase() {
     if (playerHand.length === 0 && computerHand.length === 0) {
-        console.log("all cards played, starting scoring");
         state = "scoringPhase";
         setTimeout(gameSequence, 1500);
     } else {
@@ -266,7 +258,6 @@ function cardPlayerClicked() {
     playerClicked = 1;
     var id = event.target.parentElement.id;
     var cardPicked = id.substr(id.length - 1);
-    console.log("player chose to play " + playerHand[cardPicked].name);
     playerSelection = cardPicked;
     setTimeout(function() {
         playerClicked = 0;
@@ -289,7 +280,6 @@ function swapTurn() {
     } else {
         turn = "player";
     }
-    console.log("next turn should be " + turn);
 }
 
 
@@ -304,7 +294,6 @@ function totalInPlay() {
 
 // resets the board for new round after scoring phase.
 function turnTransitionPhase() {
-    console.log("reseting playPhase and setting next player");
     cardsPlayed = [];
     playerHand = [];
     computerHand = [];

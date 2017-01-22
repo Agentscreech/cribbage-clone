@@ -44,7 +44,6 @@ function playerPlayCard() {
 //this is what will happen when it's the players turn.
 function playerTurn() {
     if (!ableToPlay()) {
-        console.log("player wasn't able to play");
         swapTurn();
         $('#instruction p').text("You can not make a move, you say 'GO'");
         setTimeout(playerSaidGo, 1500);
@@ -59,7 +58,6 @@ function playerTurn() {
 //Go phase for the player
 function computerSaidGo() {
     state = "playerGo";
-    console.log("computer said Go");
     if (ableToPlay()) {
         playerClicked = 0;
         playerTurn();
@@ -67,12 +65,10 @@ function computerSaidGo() {
         playerScore += 1;
         drawScore();
         if (!findWinner()) {
-            console.log("player scored from Go, Score is " + playerScore);
             setTimeout(function() {
                 $('#instruction p').text("Player scores 1 for the Go/Last");
             }, 1000);
             state = "resetPlayPhase";
-            console.log("player can't go, resetting play phase");
             $('#instruction p').text("You can no longer make a move, the round is over");
             setTimeout(gameSequence, 1000);
         }

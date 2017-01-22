@@ -208,7 +208,7 @@
             } else {
                 break;
             }
-        } 
+        }
         if (j == 0) {
             // Overflow
             result[result.length] = 1;
@@ -382,7 +382,6 @@
             },
             init: function() {
                 this.nelem = 1;
-                // console.log("Starting nelem: " + this.nelem);
                 this.cmb = combination(ary, this.nelem);
                 this.per = _permutation(this.cmb.next());
             },
@@ -392,7 +391,6 @@
                     var cmb = this.cmb.next();
                     if (!cmb) {
                         this.nelem++;
-                        // console.log("increment nelem: " + this.nelem + " vs " + ary.length);
                         if (this.nelem > ary.length) return;
                         this.cmb = combination(ary, this.nelem);
                         cmb = this.cmb.next();

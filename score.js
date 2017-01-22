@@ -23,13 +23,11 @@ function scoreCrib() {
     if (cribOwner == "computer") {
         computerPoints += scoreAll(crib);
         computerScore += computerPoints;
-        console.log("computer crib was worth " + computerPoints);
         $('#instruction p').text("Crib was worth " + computerPoints + " points for the computer.");
         drawScore();
     } else if (cribOwner == "player") {
         playerPoints += scoreAll(crib);
         playerScore += playerPoints;
-        console.log("player's crib was worth " + playerPoints);
         $('#instruction p').text("Crib was worth " + playerPoints + " points for the player.");
         drawScore();
     } else {
@@ -45,11 +43,9 @@ function scorePlayerPhase() {
     var playerPoints = 0;
     playerPoints += scoreAll(playerPlayed);
     playerScore += playerPoints;
-    console.log("Player scored " + playerPoints + " points.");
     $('#instruction p').text("Player scored " + playerPoints + " points.");
     drawScore();
     if (!findWinner()) {
-        console.log("player scored from their Hand, score is " + playerScore);
         setTimeout(function() {
             if (cribOwner == "computer") {
                 state = "scoreComputerPhase";
@@ -73,11 +69,9 @@ function scoreComputerPhase() {
     var computerPoints = 0;
     computerPoints += scoreAll(computerPlayed);
     computerScore += computerPoints;
-    console.log("Computer scored " + computerPoints + " points.");
     $('#instruction p').text("Computer scored " + computerPoints + " points.");
     drawScore();
     if (!findWinner()) {
-        console.log("computer scored from their Hand, score is " + computerScore);
         setTimeout(function() {
             if (cribOwner == "player") {
                 state = "scorePlayerPhase";
@@ -97,13 +91,11 @@ function scoreComputerPhase() {
 //checks if someone reaches 121 points
 function findWinner() {
     if (computerScore >= 121) {
-        console.log("computer has won");
         state = "computerWon";
         gameSequence();
         return true;
     } else if (playerScore >= 121) {
         state = "playerWon";
-        console.log("player has won");
         gameSequence();
         return true;
     } else {
@@ -145,7 +137,6 @@ function scoreOnPlay(cardsPlayed) {
             }
         }
     }
-    console.log(points + " awarded for that play");
     return points;
 }
 
