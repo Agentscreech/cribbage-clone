@@ -21,7 +21,7 @@ Don't know how to play?  Read up on the [rules](http://www.cribbage.org/rules/)
 
 Ultra basic description is you play cards and they get scored.  First to 121 wins.
 
-Clone the repository and then open the index.html file or go to [my live site](www.traviswalentin.com/cribbage-clone).
+Clone the repository and then open the index.html file or go to [my live site](http://www.traviswalentin.com/cribbage-clone).
 
 Click on the card to start the game and follow the instructions in the center green bar in between the 2 scores.
 
