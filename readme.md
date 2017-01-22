@@ -1,9 +1,11 @@
-README
+Cribbage
+========
 
-*
-In the 3rd week of General Assembly's Web Development Immersive program, we were given a week to create and deploy a game.
+### Background
 
-// list requirements.
+This is the first week long project for General Assembly Web Development Immersive.
+
+After 2 weeks of instruction, we had to build a front end game.
 
 I didn't want to use a framework because I wanted to challenge myself to build the whole thing from the ground up.
 
@@ -13,4 +15,31 @@ I chose cribbage. Cribbage is a card game with many phases and many rules that c
 
 I was familiar with the game having played it quite often as a kid, so I knew what I was getting into...sort of.
 
-I ended up breaking everything down in to more and more granular chunks starting with the scoring.  There's no point to a game if you can't see how well you are doing.  I wanted to make sure I could tackle and get the algorithms needed to properly score the hands before I went any further.  If I couldn't get that proof of concept done within the first day, I would still have time left over to switch to something else that I would be able to complete.  It took 5 hours of whiteboarding and research to get 2 functions written that I understood what they were doing and why.  I had to get more familiar with bitwise operators to make the tests to find all possible combinations of cards and if they satisfied the conditions of scoring.   
+### Usage
+
+Don't know how to play?  Read up on the [rules](http://www.cribbage.org/rules/)
+
+Ultra basic description is you play cards and they get scored.  First to 121 wins.
+
+Clone the repository and then open the index.html file or go to [my live site](www.traviswalentin.com/cribbage-clone).
+
+Click on the card to start the game and follow the instructions in the center green bar in between the 2 scores.
+
+![start page](/img/startimage.jpg)
+
+
+### Technologies
+
+Basic HTML, CSS , Javascript with jQuery
+
+### Known Issues
+
+* There still exists a bug where if you play to quickly at just the right time, the scoring process runs twice.
+
+* Certain plays don't fire the proper scoring algorithms.
+
+### Future additions
+
+* Redesign would include a basic start up modal and then a scoring modal with a next button when the player is ready to see the next screen.
+
+* Update styling so it looks a little better.
